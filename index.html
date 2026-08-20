@@ -20,8 +20,106 @@ a:hover{text-decoration:underline}
 hr{border:none;border-top:1px solid #e2e8f0;margin:36px 0}
 li{margin:5px 0}
 .footer{margin-top:48px;padding-top:16px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:0.85em}
+
+body{max-width:1280px;display:flex;gap:0;padding:0;margin:0 auto}
+.toc{position:sticky;top:0;align-self:flex-start;width:300px;min-width:300px;height:100vh;overflow-y:auto;border-right:1px solid #e2e8f0;padding:28px 20px 40px;background:#fbfdfc;box-sizing:border-box}
+.toc-title{font-weight:700;color:#0b5c41;font-size:1.05em;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #0f8a5f}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc ul ul{margin-left:14px}
+.toc li{margin:3px 0}
+.toc a{color:#374151;font-size:0.86em;display:block;padding:3px 8px;border-radius:6px;border-left:2px solid transparent}
+.toc a:hover{color:#0f8a5f;background:#e8f5ee;text-decoration:none}
+.toc a.active{color:#0b5c41;font-weight:600;background:#e8f5ee;border-left-color:#0f8a5f}
+.toc-h3 a{color:#64748b}
+.toc-part-divider{font-size:0.78em;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin:18px 0 6px;padding-top:12px;border-top:1px dashed #d7e6de}
+.content{flex:1;min-width:0;max-width:960px;margin:0 auto;padding:40px 48px}
+h2[id],h3[id]{scroll-margin-top:20px}
+@media (max-width:900px){body{display:block}.toc{position:relative;width:100%;min-width:0;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid #e2e8f0}.content{padding:24px 20px}}
 </style></head>
 <body>
+<nav class="toc">
+<div class="toc-title">📑 目录</div>
+<li class="toc-h2"><a href="#sec-1">1. Project Overview</a>
+<ul>
+<li class="toc-h3"><a href="#sec-2">1.1 Background & Opportunity</a></li>
+<li class="toc-h3"><a href="#sec-3">1.2 Positioning (lessons validated / falsified)</a></li>
+<li class="toc-h3"><a href="#sec-4">1.3 North Star Metric</a></li>
+<li class="toc-h3"><a href="#sec-5">1.4 Phase 1 Goals (by message type, daily funnel basis)</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-6">2. Benchmark Baseline (daily-average basis)</a>
+<ul>
+<li class="toc-h3"><a href="#sec-7">2.1 Marketing Funnel Baseline (V target baseline from business strategy table, daily average, subscription-pool driven)</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-8">3. Phase 1 Scope</a>
+<ul>
+<li class="toc-h3"><a href="#sec-9">3.1 In Scope</a></li>
+<li class="toc-h3"><a href="#sec-10">3.2 Out of Scope</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-11">4. Solution Design</a>
+<ul>
+<li class="toc-h3"><a href="#sec-12">4.1 Send Scenarios · System/Transactional (Phase 1 priority, low compliance pressure)</a></li>
+<li class="toc-h3"><a href="#sec-13">4.2 Send Scenarios · Marketing (owner: Jolyne; Phase 1 pilot core: two-strategy second touch)</a></li>
+<li class="toc-h3"><a href="#sec-14">4.3 Subscription Scenarios (collection touchpoints + double opt-in solution)</a></li>
+<li class="toc-h3"><a href="#sec-15">4.4 Send Strategy (coordination with existing channels)</a></li>
+<li class="toc-h3"><a href="#sec-16">4.5 Explicitly Out of Scope (red lines)</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-17">5. Technical Implementation & Dependencies</a>
+<ul>
+<li class="toc-h3"><a href="#sec-18">5.1 Architecture</a></li>
+<li class="toc-h3"><a href="#sec-19">5.2 Dependency List</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-20">6. Risks & Compliance</a></li>
+<li class="toc-h2"><a href="#sec-21">7. Monthly Cost Estimate</a></li>
+<li class="toc-h2"><a href="#sec-22">8. Milestones</a></li>
+<li class="toc-h2"><a href="#sec-23">9. Appendices</a>
+<ul>
+<li class="toc-h3"><a href="#sec-24">9.1 Funnel Basis & Key Assumptions (derivation details)</a></li>
+<li class="toc-h3"><a href="#sec-25">9.2 Alibaba International Measured Data (feasibility evidence)</a></li>
+<li class="toc-h3"><a href="#sec-26">9.3 Glossary</a></li>
+<li class="toc-h3"><a href="#sec-27">9.4 References</a></li>
+</ul></li>
+<div class="toc-part-divider">Part 2 · 中文版</div>
+<li class="toc-h2"><a href="#sec-29">一、项目概述</a>
+<ul>
+<li class="toc-h3"><a href="#sec-30">1.1 背景与机会</a></li>
+<li class="toc-h3"><a href="#sec-31">1.2 定位（已证伪的教训）</a></li>
+<li class="toc-h3"><a href="#sec-32">1.3 北极星指标</a></li>
+<li class="toc-h3"><a href="#sec-33">1.4 一期目标（按消息类型拆分，日均漏斗口径）</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-34">二、对标基线（日均口径）</a>
+<ul>
+<li class="toc-h3"><a href="#sec-35">2.1 营销漏斗基线（业务策略表 V 目标基线，日均口径，订阅池驱动）</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-36">三、一期范围界定</a>
+<ul>
+<li class="toc-h3"><a href="#sec-37">3.1 In（一期核心）</a></li>
+<li class="toc-h3"><a href="#sec-38">3.2 Out（一期不做）</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-39">四、方案设计</a>
+<ul>
+<li class="toc-h3"><a href="#sec-40">4.1 发送场景 · 系统/交易类（一期优先，合规压力小）</a></li>
+<li class="toc-h3"><a href="#sec-41">4.2 发送场景 · 营销类（负责：Jolyne；一期试点核心：两大策略二次触达）</a></li>
+<li class="toc-h3"><a href="#sec-42">4.3 订阅场景（收集触点 + double opt-in 方案）</a></li>
+<li class="toc-h3"><a href="#sec-43">4.4 发送策略（与现有渠道的协同关系）</a></li>
+<li class="toc-h3"><a href="#sec-44">4.5 明确不做的（红线）</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-45">五、技术实现与依赖</a>
+<ul>
+<li class="toc-h3"><a href="#sec-46">5.1 架构</a></li>
+<li class="toc-h3"><a href="#sec-47">5.2 依赖清单</a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sec-48">六、风险与合规</a></li>
+<li class="toc-h2"><a href="#sec-49">七、月度费用测算</a></li>
+<li class="toc-h2"><a href="#sec-50">八、里程碑</a></li>
+<li class="toc-h2"><a href="#sec-51">九、附录</a>
+<ul>
+<li class="toc-h3"><a href="#sec-52">9.1 漏斗口径与关键假设（推导细节）</a></li>
+<li class="toc-h3"><a href="#sec-53">9.2 Alibaba 国际站实测（可行性佐证明细）</a></li>
+<li class="toc-h3"><a href="#sec-54">9.3 术语表</a></li>
+<li class="toc-h3"><a href="#sec-55">9.4 参考资料</a></li>
+</ul></li>
+</nav>
+<div class="content">
 <h1>WhatsApp Buyer Messaging Strategy (Phase 1) BRD ｜ WhatsApp 买家发送策略（一期）BRD</h1>
 <table>
 <thead>
@@ -54,8 +152,8 @@ li{margin:5px 0}
 </tbody>
 </table>
 <hr>
-<h2>1. Project Overview</h2>
-<h3>1.1 Background &amp; Opportunity</h3>
+<h2 id="sec-1">1. Project Overview</h2>
+<h3 id="sec-2">1.1 Background &amp; Opportunity</h3>
 <table>
 <thead>
 <tr>
@@ -87,17 +185,17 @@ li{margin:5px 0}
 </tr>
 </tbody>
 </table>
-<h3>1.2 Positioning (lessons validated / falsified)</h3>
+<h3 id="sec-3">1.2 Positioning (lessons validated / falsified)</h3>
 <ul>
 <li>✅ <strong>WhatsApp = &quot;walkie-talkie&quot; that accelerates first response</strong>: first response ≤5min → AB2 rate 59.6% (+25pp vs &gt;9h).</li>
 <li>❌ <strong>≠ Off-site order chasing</strong>: disproven (−7.7pp); Phase 1 excludes &quot;order-chasing&quot; marketing.</li>
 <li><strong>Phase 1 buyer-side positioning</strong>: carry and amplify existing touch effects, shorten first response time, prevent conversation loss — NOT independent new-user acquisition or order chasing.</li>
 </ul>
-<h3>1.3 North Star Metric</h3>
+<h3 id="sec-4">1.3 North Star Metric</h3>
 <blockquote>
 <p><strong>Daily AB2 ≥ 8</strong> (by FY26/27 year-end 2027-03-31; funnel derivation in 2.1 and Appendix 9.1; all metrics are daily averages from send onwards)</p>
 </blockquote>
-<h3>1.4 Phase 1 Goals (by message type, daily funnel basis)</h3>
+<h3 id="sec-5">1.4 Phase 1 Goals (by message type, daily funnel basis)</h3>
 <p><strong>North Star (total): daily AB2 ≥ 8</strong> (by FY26/27 year-end 2027-03-31) = <strong>system messages contribution (floor ≥ 3)</strong> + <strong>marketing messages contribution (floor ≥ 5)</strong>. Contribution split to be locked via AB2 conversations analysis (under calculation).</p>
 <p><strong>A. System message goals (details owner: Utkarsha · PRD_Reminder basis) — activate existing stock, event-driven, no dependence on subscription pool ramp-up:</strong></p>
 <table>
@@ -163,8 +261,8 @@ li{margin:5px 0}
 </table>
 <p><strong>C. Global guardrails (shared by both types):</strong> delivery rate ≥ 90%, 48h read rate ≥ 50%, unsubscribe rate &lt; 5%, complaint/block rate &lt; 2%.</p>
 <hr>
-<h2>2. Benchmark Baseline (daily-average basis)</h2>
-<h3>2.1 Marketing Funnel Baseline (V target baseline from business strategy table, daily average, subscription-pool driven)</h3>
+<h2 id="sec-6">2. Benchmark Baseline (daily-average basis)</h2>
+<h3 id="sec-7">2.1 Marketing Funnel Baseline (V target baseline from business strategy table, daily average, subscription-pool driven)</h3>
 <p><strong>Funnel breakdown</strong>: North Star daily AB2 ≥ 8 is delivered by <strong>two independent tracks</strong> — ① <strong>system messages</strong> (event-driven: follow-up + conversation reminders, activating existing conversations, target contribution ≥ 3, see 4.1 / PRD_Reminder) ② <strong>marketing messages</strong> (subscription-pool funnel, target contribution ≥ 8.8, i.e. table below). Marketing frequency benchmarked to Alibaba: FY26 target <strong>2 rounds/week/user</strong> (Yuque &quot;WhatsApp Annual Review &amp; Strategy Planning&quot;); EU compliance stricter, Visable starts at <strong>1 round/week</strong>, A/B validation cap of 2 rounds/week.</p>
 <table>
 <thead>
@@ -224,8 +322,8 @@ li{margin:5px 0}
 <p><strong>Post-subscription onboarding (benchmarked to Alibaba subscription welcome flow, included in Phase 1)</strong>: <strong>T+0 send 1 message</strong> after subscription confirmed (double opt-in completed) — ① confirm subscription + preview what they'll receive (RFQ opportunity alerts / product recommendations / seller messages) ② preference settings (categories + frequency: 1/week / important-only) ③ unsubscribe method (compliance). One message only, one-off, <strong>does not consume the weekly 1-round marketing quota</strong>; template targets Utility (€0.035/message, incl. subscription-confirmation wording), €0.11 if Meta classifies as Marketing (costs in Ch.7 ⑥). Value: ① subscription confirmation reduces number-quality risk ② preference data enables precise audience selection (&quot;important-only&quot; preference auto-downgrades frequency, unified with frequency capping) ③ high open rate on first message builds account quality score.</p>
 </blockquote>
 <hr>
-<h2>3. Phase 1 Scope</h2>
-<h3>3.1 In Scope</h3>
+<h2 id="sec-8">3. Phase 1 Scope</h2>
+<h3 id="sec-9">3.1 In Scope</h3>
 <ol>
 <li><strong>Subscription collection</strong>: standalone checkbox on registration page (unchecked by default) + second ask after phone verification + popup after inquiry submission + Subscription Center unified management (reuse UPR-55 Lifecycle entry)</li>
 <li><strong>System/transactional messages launch</strong> (details: Utkarsha · PRD_Reminder): two buyer-side system messages (① conversation reminder: notify buyer when supplier replies; ② buyer follow-up reminder: nudge if no reply by day after supplier reply, directly serves AB2 North Star, reuse PRD_Reminder rules), all via Utility templates. Billing: free within WhatsApp 24h customer-service window (recent message in buyer's dialog); paid Utility template outside window (~€0.03–0.04/message; on-site behavior does not open a window)</li>
@@ -233,7 +331,7 @@ li{margin:5px 0}
 <li><strong>Sending infrastructure</strong>: three-state subscription service (subscribed/unsubscribed/unknown), frequency capping (24h/once per relationship pair, ≤3/day per user), tracking loop (push_id + visitor_sk attribution)</li>
 <li><strong>Templates</strong>: Utility first batch EN+DE, neutral wording; Marketing templates enter review process but not sent at scale yet</li>
 </ol>
-<h3>3.2 Out of Scope</h3>
+<h3 id="sec-10">3.2 Out of Scope</h3>
 <ul>
 <li>❌ Full-scale Marketing delivery (browse→AB and other Phase-2 candidate strategies) → Phase 2 (pending Legal sign-off + subscription ramp-up)</li>
 <li>❌ AI personalization generation (LLM summary/intent) → P2</li>
@@ -241,8 +339,8 @@ li{margin:5px 0}
 <li>❌ Off-site order-chasing scenarios (disproven)</li>
 </ul>
 <hr>
-<h2>4. Solution Design</h2>
-<h3>4.1 Send Scenarios · System/Transactional (Phase 1 priority, low compliance pressure)</h3>
+<h2 id="sec-11">4. Solution Design</h2>
+<h3 id="sec-12">4.1 Send Scenarios · System/Transactional (Phase 1 priority, low compliance pressure)</h3>
 <p>Buyer-side system messages: <strong>2 types</strong> (details: <strong>Utkarsha</strong> · PRD_Reminder owner; aligned with <a href="https://visable.atlassian.net/wiki/spaces/PRODTECH/pages/63340593/PRD_Reminder+Notification+to+improve+AB2">PRD_Reminder Notification to improve AB2</a>; email/app push channels defined, CX-564 email template Done; WhatsApp carries both buyer-side types):</p>
 <table>
 <thead>
@@ -275,7 +373,7 @@ li{margin:5px 0}
 <blockquote>
 <p><strong>Billing path</strong>: free if both messages land inside the WhatsApp 24h customer-service window (recent message in buyer's dialog); paid Utility template outside the window (~€0.03–0.04/message; on-site behavior does not open a window). Follow-up timing consistent with PRD (next-day 10am/9am), different time slots from marketing second touch (4.2) to avoid repeated disturbance of the same user.</p>
 </blockquote>
-<h3>4.2 Send Scenarios · Marketing (owner: Jolyne; Phase 1 pilot core: two-strategy second touch)</h3>
+<h3 id="sec-13">4.2 Send Scenarios · Marketing (owner: Jolyne; Phase 1 pilot core: two-strategy second touch)</h3>
 <p><strong>Phase 1 pilot: two strategies (selected from existing PUSH/EDM marketing strategies, see 01 push business strategy table / 02 edm business strategy table):</strong></p>
 <table>
 <thead>
@@ -391,7 +489,7 @@ li{margin:5px 0}
 </tbody>
 </table>
 <p><strong>Pilot cadence:</strong> DE single-country canary (after Legal sign-off + Marketing template approval) → run 2–3 rounds (<strong>1 round/week</strong>) to evaluate → frequency A/B (1 vs 2 rounds/week; observe disturbance/unsubscribe/complaints) → expand countries/scale after passing (FR/IT/ES following template review).</p>
-<h3>4.3 Subscription Scenarios (collection touchpoints + double opt-in solution)</h3>
+<h3 id="sec-14">4.3 Subscription Scenarios (collection touchpoints + double opt-in solution)</h3>
 <table>
 <thead>
 <tr>
@@ -443,7 +541,7 @@ li{margin:5px 0}
 <li><strong>Unsubscribe chain</strong>: Subscription Center + off-site STOP/UNSUBSCRIBE/ABMELDEN, effective immediately, synced to three states.</li>
 <li><strong>Post-subscription onboarding (T+0, 1 message, one-off)</strong>: welcome message immediately after Level-2 confirmation — ① confirm subscription + preview what they'll receive (RFQ opportunity alerts / product recommendations / seller messages) ② preference settings (categories + frequency: 1/week / important-only; &quot;important-only&quot; auto-downgrades frequency) ③ unsubscribe method (Subscription Center + STOP). Template targets Utility (incl. subscription-confirmation wording, €0.035/message); €0.11 if Meta classifies as Marketing. <strong>Does not consume the weekly 1-round marketing quota; excluded from audience pool for 7 days after subscription</strong> (benchmarked to Alibaba subscription welcome flow).</li>
 </ol>
-<h3>4.4 Send Strategy (coordination with existing channels)</h3>
+<h3 id="sec-15">4.4 Send Strategy (coordination with existing channels)</h3>
 <ul>
 <li><strong>Cadence</strong>: WhatsApp ranks after Visable's existing PUSH/EDM touches; <strong>second touch</strong> on users who responded to existing touches; frequency <strong>starts at 1 round/week</strong> (benchmarked to Alibaba FY26 marketing target of 2 rounds/week; EU compliance starts lower; pilot A/B caps at 2 rounds/week) — a &quot;carry + amplify&quot; relationship with existing PUSH/EDM, not a parallel independent channel.</li>
 <li><strong>Trigger timing</strong>: marketing second touch at 10:00 AM buyer local time (Alibaba BRD §5.4 experience); system: conversation reminder real-time on event, follow-up reminder per PRD_Reminder cadence (next day after supplier reply, wlw 10am / ep 9am).</li>
@@ -451,7 +549,7 @@ li{margin:5px 0}
 <li><strong>Fatigue</strong>: EU tolerance is low, capping strict (24h/1 per relationship pair, ≤3 per user per 24h, global daily circuit breaker ≤ 15K sessions against script attacks).</li>
 <li><strong>Post-subscription onboarding</strong>: T+0 one message after subscription (welcome + preference settings), does not consume weekly 1-round marketing quota; &quot;important-only&quot; preference auto-downgrades frequency, unified with capping.</li>
 </ul>
-<h3>4.5 Explicitly Out of Scope (red lines)</h3>
+<h3 id="sec-16">4.5 Explicitly Out of Scope (red lines)</h3>
 <table>
 <thead>
 <tr>
@@ -475,8 +573,8 @@ li{margin:5px 0}
 </tbody>
 </table>
 <hr>
-<h2>5. Technical Implementation &amp; Dependencies</h2>
-<h3>5.1 Architecture</h3>
+<h2 id="sec-17">5. Technical Implementation &amp; Dependencies</h2>
+<h3 id="sec-18">5.1 Architecture</h3>
 <pre><code>Inquiry / RFQ Service event stream (incl. follow-up reminder, reusing requests-service triggers)
         ↓
 Orchestration layer (subscription-state lookup → frequency capping → template routing → tracking)
@@ -484,7 +582,7 @@ Orchestration layer (subscription-state lookup → frequency capping → templat
 Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </code></pre>
 <p>Data granularity: three levels of scenario id - message id - user id (aligned with Alibaba BRD), tracking fields incl. push_id + visitor_sk (reuse existing attribution chain).</p>
-<h3>5.2 Dependency List</h3>
+<h3 id="sec-19">5.2 Dependency List</h3>
 <table>
 <thead>
 <tr>
@@ -522,7 +620,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>6. Risks &amp; Compliance</h2>
+<h2 id="sec-20">6. Risks &amp; Compliance</h2>
 <table>
 <thead>
 <tr>
@@ -561,7 +659,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </table>
 <p>Compliance prerequisites: GDPR Art.7 + ePrivacy explicit consent, double opt-in, evidence retention (who/when/entry/exact wording), immediate unsubscribe, Abmahnung risk.</p>
 <hr>
-<h2>7. Monthly Cost Estimate</h2>
+<h2 id="sec-21">7. Monthly Cost Estimate</h2>
 <p><strong>Billing model (Meta WhatsApp pay-as-you-go)</strong>: no account application fee / fixed monthly fee / subscription fee; billed per <strong>template message</strong> only (price varies by category); conversation messages within the 24h customer-service window are free.</p>
 <table>
 <thead>
@@ -686,7 +784,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <p>Notes: ① Ramp-up period (2026-10 to 2027-03) cumulative ≈ €31,000–32,300 (marketing ≈ €30.5K + system ≈ €0.4K–1.8K); steady state ≈ €9,800–10,100/month (annualized ≈ €118K–121K); ② if frequency A/B validates full switch to <strong>2 rounds/week</strong> (benchmarked to Alibaba weekly 2x), steady-state marketing cost doubles to ≈ €19,400/month (total ≈ €19,500–19,900/month, annualized ≈ €234K–239K), AB2 output doubles (≥ 17.6/day) — cost and AB2 roughly linear, per-AB2 cost unchanged; ③ system messages billed conservatively at full out-of-window rate — free if within 24h window, actual below ceiling; marketing messages mostly out-of-window (proactive touch, buyer no recent dialog), billed at full Marketing rate; ④ system-message steady volume (100–440/day) and subscription coverage ramp (2026-10 ~30% → 2027-03 full) are estimates, locked by AB2 conversations analysis; ⑤ steady-state per-AB2 channel cost ≈ €37 (steady monthly cost ÷ 265 monthly AB2, Meta template fee only, 1 round/week tier, independent of subscription scale); ramp-up per-AB2 ≈ €38 (cumulative cost ÷ 829 cumulative AB2); Alibaba overall CPUV $0.1 / CPPB $11.4 (incl. other costs, scale reference only); ⑥ <strong>subscription onboarding (one-off, T+0 one message after subscription)</strong>: FY cumulative ≤ 35,000 messages, ≈ €1,200 at Utility, ≈ €3,900 if classified Marketing (template category pending Meta review); not in monthly main table; with onboarding, ramp-up cumulative ≈ €32,200–36,200.</p>
 </blockquote>
 <hr>
-<h2>8. Milestones</h2>
+<h2 id="sec-22">8. Milestones</h2>
 <table>
 <thead>
 <tr>
@@ -724,12 +822,12 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>9. Appendices</h2>
-<h3>9.1 Funnel Basis &amp; Key Assumptions (derivation details)</h3>
+<h2 id="sec-23">9. Appendices</h2>
+<h3 id="sec-24">9.1 Funnel Basis &amp; Key Assumptions (derivation details)</h3>
 <p><strong>Funnel basis &amp; key assumptions</strong>: all funnel metrics from send onwards are <strong>daily averages</strong>. Key assumptions: reachable rate <strong>60%</strong> (Visable builds double opt-in from zero, subscription quality higher than Alibaba mixed-consent measured 40%), marketing frequency <strong>1 round/week</strong> (daily send rate 14%, full pool in 7 days; benchmarked to Alibaba FY26 weekly 2x, EU compliance starts lower), CTR 10% × decay 0.6 = <strong>6%</strong> (open rate declines as frequency rises, Alibaba FY26 target basis), UV→AB 20%, AB→AB2 25% (measured baseline validation: buyer response to positive connection currently QDR wlw 18%/ep 36%, RFQ wlw 33%/ep 28%; 25% within range, PRD_Reminder basis). Daily-average derivation (<strong>target: daily AB2 ≥ 8</strong>): subscriptions 35,000 → reachable 21,000 (×60%) → daily sends 2,940 (×14%) → daily UV 176 (×6%) → daily AB 35 (×20%) → <strong>daily AB2 8.8 (×25%)</strong>. <strong>Breakeven subscription baseline: 8 ÷ 25% ÷ 20% ÷ 6% ÷ 14% ÷ 60% ≈ 31,700</strong> — target 35,000 = 110% buffer over breakeven (still ≥ 8 at CTR decayed to 5.5%; exactly at target if 32,000). Why 35,000 instead of the original 67,000: the old 67,000 implied a slow &quot;25-day round&quot; frequency basis; after raising frequency to 1 round/week, the breakeven subscription demand halves naturally (daily new 316 → 165; DAU 45K conversion 0.70% → 0.37%); if frequency A/B switches to 2 rounds/week (28%/day), breakeven further drops to ~16,000.</p>
 <p><strong>Sensitivity</strong>: frequency is the biggest lever on AB2 output (biweekly 7%/day → weekly 14%/day → 2/week 28%/day; sends double linearly, AB2 doubles; CTR conservatively discounted at 0.6 decay, higher output if decay is gentler). At fixed baseline 35,000: 2/week tier gives daily AB2 ≈ 17.6. If subscription ramp under-delivers (32,000), 1 round/week still exactly meets AB2 = 8; if 16,000, needs 2/week frequency + measured CTR ≥ 6% jointly. Conversely if measured reachable rate &lt; 60%, subscription baseline must be raised.</p>
 <p><strong>System-message funnel (event-driven, not audience-pool based)</strong>: follow-up / conversation reminders don't depend on subscription-pool ramp — AB baseline (current daily positive connections, AB2 conversations analysis data) → WhatsApp subscribed coverage (system messages need Level-1 opt-in only) → follow-up touch (next-day wlw 10am / ep 9am, once per request) → buyer response rate uplift 2pp (PRD target) → AB2 increment. Floor contribution ≥ 3/day; exact number locked by AB baseline measurement.</p>
-<h3>9.2 Alibaba International Measured Data (feasibility evidence)</h3>
+<h3 id="sec-25">9.2 Alibaba International Measured Data (feasibility evidence)</h3>
 <table>
 <thead>
 <tr>
@@ -794,7 +892,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <blockquote>
 <p>Interpretation: Phase 1 is a &quot;validate the chain&quot; scale, not scale-up scale. 35,000 subscriptions (FY-end cumulative, daily new ≈ 165) is the target baseline for daily AB2 ≥ 8 (110% buffer over breakeven 32,000); subscription collection remains the top priority (EU consent is strict; Alibaba accumulated 1.5+ years; Visable starts from zero), but pressure is significantly reduced from the original 67,000 (daily new ≈ 316). Reachable rate assumed 60% (double opt-in quality higher; Alibaba measured 40% as conservative floor), pending data-team validation; if below 60% in practice, subscription baseline must be raised accordingly.</p>
 </blockquote>
-<h3>9.3 Glossary</h3>
+<h3 id="sec-26">9.3 Glossary</h3>
 <table>
 <thead>
 <tr>
@@ -821,7 +919,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tr>
 </tbody>
 </table>
-<h3>9.4 References</h3>
+<h3 id="sec-27">9.4 References</h3>
 <table>
 <thead>
 <tr>
@@ -873,7 +971,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>Part 2 · 中文版（内部对照）</h2>
+<h2 id="sec-28">Part 2 · 中文版（内部对照）</h2>
 <h1>WhatsApp 买家发送策略（一期）BRD</h1>
 <table>
 <thead>
@@ -906,8 +1004,8 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>一、项目概述</h2>
-<h3>1.1 背景与机会</h3>
+<h2 id="sec-29">一、项目概述</h2>
+<h3 id="sec-30">1.1 背景与机会</h3>
 <table>
 <thead>
 <tr>
@@ -939,17 +1037,17 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tr>
 </tbody>
 </table>
-<h3>1.2 定位（已证伪的教训）</h3>
+<h3 id="sec-31">1.2 定位（已证伪的教训）</h3>
 <ul>
 <li>✅ <strong>WhatsApp = 拉快首响的&quot;对讲机&quot;</strong>：首响 ≤5min → AB2 率 59.6%（+25pp vs &gt;9h）。</li>
 <li>❌ <strong>≠ 站外追单</strong>：已证伪（−7.7pp），一期不做&quot;催下单/追单&quot;类营销。</li>
 <li><strong>买家侧一期定位</strong>：承接+放大已有触达效果、缩短首响时间、防对话流失，而非独立拉新追单。</li>
 </ul>
-<h3>1.3 北极星指标</h3>
+<h3 id="sec-32">1.3 北极星指标</h3>
 <blockquote>
 <p><strong>日均 AB2 ≥ 8 个</strong>（FY26/27 财年底 2027-03-31 达标；漏斗推导见 2.1 及附录 9.1，自发送起均为日均口径）</p>
 </blockquote>
-<h3>1.4 一期目标（按消息类型拆分，日均漏斗口径）</h3>
+<h3 id="sec-33">1.4 一期目标（按消息类型拆分，日均漏斗口径）</h3>
 <p><strong>北极星（合计）：日均 AB2 ≥ 8 个</strong>（FY26/27 财年底 2027-03-31 达标）＝ <strong>系统消息贡献（下限 ≥ 3）</strong> ＋ <strong>营销消息贡献（下限 ≥ 5）</strong>。分配比例以 AB2 conversations analysis 数据锁定（测算中）。</p>
 <p><strong>A. 系统消息目标（细节负责：Utkarsha · PRD_Reminder 口径）——存量激活，事件驱动，不依赖订阅池爬坡：</strong></p>
 <table>
@@ -1015,8 +1113,8 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </table>
 <p><strong>C. 全局护栏（两类共享）：</strong> 送达率 ≥ 90%、48h 已读率 ≥ 50%、退订率 &lt; 5%、投诉/拉黑率 &lt; 2%。</p>
 <hr>
-<h2>二、对标基线（日均口径）</h2>
-<h3>2.1 营销漏斗基线（业务策略表 V 目标基线，日均口径，订阅池驱动）</h3>
+<h2 id="sec-34">二、对标基线（日均口径）</h2>
+<h3 id="sec-35">2.1 营销漏斗基线（业务策略表 V 目标基线，日均口径，订阅池驱动）</h3>
 <p><strong>漏斗拆分说明</strong>：北极星日均 AB2 ≥ 8 由<strong>两条独立链路</strong>汇合——① <strong>系统消息</strong>（事件驱动：催复 + conversation 提醒，激活存量对话，目标贡献 ≥ 3，见 4.1 / PRD_Reminder）② <strong>营销消息</strong>（订阅池圈人漏斗，目标贡献 ≥ 8.8，即下表）。营销频次对标国际站：FY26 目标<strong>周均 2 次/用户</strong>（语雀《WhatsApp 年度总结&amp;策略规划》），欧洲合规从严，Visable 起步<strong>每周 1 次</strong>、A/B 验证周 2 次上限。</p>
 <table>
 <thead>
@@ -1076,8 +1174,8 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <p><strong>订阅后 onboarding（参考国际站订阅欢迎流，一期包含）</strong>：订阅成功（二级确认完成）后 <strong>T+0 发 1 条</strong>欢迎消息——① 确认订阅成功 + 预告将收到什么（RFQ 机会提醒 / 产品推荐 / 卖家消息）② 偏好设置入口（品类 + 频次：每周 1 次 / 仅重要消息）③ 退订方式（合规）。仅 1 条、一次性、<strong>不占每周 1 轮营销额度</strong>；模板争取 Utility（€0.035/条，含订阅确认措辞），Meta 判 Marketing 则按 €0.11 计（费用见七章⑥）。价值：① 订阅确认降号码质量分风险 ② 偏好数据支撑精准圈人（&quot;仅重要消息&quot;偏好自动降频，与频控统一）③ 首条消息打开率高，养账号质量分。</p>
 </blockquote>
 <hr>
-<h2>三、一期范围界定</h2>
-<h3>3.1 In（一期核心）</h3>
+<h2 id="sec-36">三、一期范围界定</h2>
+<h3 id="sec-37">3.1 In（一期核心）</h3>
 <ol>
 <li><strong>订阅收集链路</strong>：注册页独立勾选框（默认不勾选）+ 手机号验证后二次询问 + 询盘发出后弹窗 + Subscription Center 统一管理（复用 UPR-55 Lifecycle 入口）</li>
 <li><strong>系统/交易类消息首发</strong>（细节负责：Utkarsha · PRD_Reminder）：两类买家侧系统消息（① conversation 提醒：供应商回复即通知买家；② 买家催复提醒：供应商回复次日未回复则催复，直接服务 AB2 北极星，复用 PRD_Reminder 规则），均走 Utility 模板。计费路径：买家在 WhatsApp 对话框内 24h 客服窗口内有消息时免费发送；窗口外走 Utility 模板付费（约 €0.03-0.04/条，站内行为不产生窗口）</li>
@@ -1085,7 +1183,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <li><strong>发送基础设施</strong>：订阅态三态服务（订阅/退订/未知）、频次控制（关系对 24h/次、用户 24h ≤ 3 次）、埋点闭环（push_id + visitor_sk 归因）</li>
 <li><strong>模板</strong>：Utility 首批 EN+DE，措辞中性；Marketing 模板进入送审流程但暂不全量发</li>
 </ol>
-<h3>3.2 Out（一期不做）</h3>
+<h3 id="sec-38">3.2 Out（一期不做）</h3>
 <ul>
 <li>❌ Marketing 全量投放（浏览→AB 等二期候选策略）→ 二期（等 Legal sign-off + 订阅量爬坡）</li>
 <li>❌ AI 个性化生成（LLM 总结/意图）→ P2</li>
@@ -1093,8 +1191,8 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <li>❌ 站外追单类场景（已证伪）</li>
 </ul>
 <hr>
-<h2>四、方案设计</h2>
-<h3>4.1 发送场景 · 系统/交易类（一期优先，合规压力小）</h3>
+<h2 id="sec-39">四、方案设计</h2>
+<h3 id="sec-40">4.1 发送场景 · 系统/交易类（一期优先，合规压力小）</h3>
 <p>买家侧系统消息共 <strong>2 类</strong>（细节负责：<strong>Utkarsha</strong> · PRD_Reminder owner；对齐 <a href="https://visable.atlassian.net/wiki/spaces/PRODTECH/pages/63340593/PRD_Reminder+Notification+to+improve+AB2">PRD_Reminder Notification to improve AB2</a>，email/app push 渠道已定义、CX-564 邮件模板 Done；WhatsApp 承接 buyer 侧两类）：</p>
 <table>
 <thead>
@@ -1127,7 +1225,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <blockquote>
 <p>计费路径：两类消息若落在 WhatsApp 24h 客服窗口内（买家对话框内最近有消息）免费；窗口外走 Utility 模板付费（约 €0.03-0.04/条，站内行为不产生窗口）。催复触发节奏与 PRD 定义一致（次日 10am/9am），与营销二次触达（4.2）不同时段，避免同一用户重复打扰。</p>
 </blockquote>
-<h3>4.2 发送场景 · 营销类（负责：Jolyne；一期试点核心：两大策略二次触达）</h3>
+<h3 id="sec-41">4.2 发送场景 · 营销类（负责：Jolyne；一期试点核心：两大策略二次触达）</h3>
 <p><strong>一期试点两大策略（从现有 PUSH/EDM 营销策略中选定，详见 01 push业务策略表 / 02 edm业务策略表）：</strong></p>
 <table>
 <thead>
@@ -1243,7 +1341,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <p><strong>试点节奏：</strong> DE 单国灰度（Legal sign-off + Marketing 模板过审后启动）→ 跑通 2-3 轮（<strong>每周 1 轮</strong>）评估 → 频次 A/B（每周 1 次 vs 每周 2 次，观察打扰率/退订/投诉）→ 达标后扩国/扩容（FR/IT/ES 随模板送审推进）。</p>
-<h3>4.3 订阅场景（收集触点 + double opt-in 方案）</h3>
+<h3 id="sec-42">4.3 订阅场景（收集触点 + double opt-in 方案）</h3>
 <table>
 <thead>
 <tr>
@@ -1295,7 +1393,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <li><strong>退订链路</strong>：Subscription Center + 站外 STOP/UNSUBSCRIBE/ABMELDEN，即时生效并同步三态。</li>
 <li><strong>订阅成功 onboarding（T+0，1 条，一次性）</strong>：二级确认完成后立即发欢迎消息——① 确认订阅成功 + 预告将收到什么（RFQ 机会提醒 / 产品推荐 / 卖家消息）② 偏好设置入口（品类 + 频次：每周 1 次 / 仅重要消息，&quot;仅重要消息&quot;自动降频）③ 退订方式（Subscription Center + STOP）。模板争取 Utility（含订阅确认措辞，€0.035/条）；Meta 判 Marketing 则按 €0.11 计。<strong>不占每周 1 轮营销额度，订阅后 7 天内不进入圈人池</strong>（参考国际站订阅欢迎流）。</li>
 </ol>
-<h3>4.4 发送策略（与现有渠道的协同关系）</h3>
+<h3 id="sec-43">4.4 发送策略（与现有渠道的协同关系）</h3>
 <ul>
 <li><strong>节奏</strong>：WhatsApp 排在 Visable 现有 PUSH / EDM 触达之后，对已触达有效果的用户做<strong>二次触达</strong>，频率<strong>每周 1 次起步</strong>（对标国际站 FY26 营销目标周均 2 次，欧洲合规从严从低起步；试点期 A/B 验证每周 2 次上限）——与现有 PUSH/EDM 触达策略是&quot;承接+放大&quot;关系，不是并行独立渠道。</li>
 <li><strong>触发时机</strong>：营销二次触达为买家本地时间上午 10 点（Alibaba BRD §5.4 经验）；系统类：conversation 提醒按事件实时、催复提醒按 PRD_Reminder 节奏（供应商回复次日 wlw 10am / ep 9am）。</li>
@@ -1303,7 +1401,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <li><strong>疲劳度</strong>：欧洲容忍度低，频控从严（关系对 24h/1 次、单用户 24h ≤ 3 次、每日全局熔断 ≤ 1.5w session 防脚本攻击）。</li>
 <li><strong>订阅后 onboarding</strong>：订阅成功 T+0 1 条（欢迎 + 偏好设置），不占每周 1 轮营销额度；&quot;仅重要消息&quot;偏好自动降频，与频控统一。</li>
 </ul>
-<h3>4.5 明确不做的（红线）</h3>
+<h3 id="sec-44">4.5 明确不做的（红线）</h3>
 <table>
 <thead>
 <tr>
@@ -1327,8 +1425,8 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>五、技术实现与依赖</h2>
-<h3>5.1 架构</h3>
+<h2 id="sec-45">五、技术实现与依赖</h2>
+<h3 id="sec-46">5.1 架构</h3>
 <pre><code>Inquiry / RFQ Service 事件流（含催复提醒，复用 requests-service 触发）
         ↓
 编排层（订阅态查询 → 频控 → 模板路由 → 埋点）
@@ -1336,7 +1434,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 直连 Meta Cloud API（复用既有通道，独立号码 + display name）
 </code></pre>
 <p>数据颗粒度：场景 id - 消息 id - 用户 id 三级（对齐 Alibaba BRD 口径），埋点字段含 push_id + visitor_sk（复用既有归因链路）。</p>
-<h3>5.2 依赖清单</h3>
+<h3 id="sec-47">5.2 依赖清单</h3>
 <table>
 <thead>
 <tr>
@@ -1374,7 +1472,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>六、风险与合规</h2>
+<h2 id="sec-48">六、风险与合规</h2>
 <table>
 <thead>
 <tr>
@@ -1413,7 +1511,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </table>
 <p>合规前置：GDPR Art.7 + ePrivacy 明示同意、double opt-in、留证（谁/何时/入口/文案原文）、退订即时生效、Abmahnung 风险。</p>
 <hr>
-<h2>七、月度费用测算</h2>
+<h2 id="sec-49">七、月度费用测算</h2>
 <p><strong>计费模型（Meta WhatsApp 按量计费）</strong>：无账号申请费/固定月费/订阅费，仅按<strong>模板消息条数</strong>计费（类别不同单价不同）；24h 客服窗口内的会话消息免费。</p>
 <table>
 <thead>
@@ -1538,7 +1636,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <p>说明：① 爬坡期（2026-10 至 2027-03）累计费用约 €31,000–32,300（营销 ≈ €30.5k + 系统 ≈ €0.4k–1.8k），稳态后约 €9,800–10,100/月（年化 ≈ €118k–121k）；② 若频次 A/B 验证后全量切到<strong>每周 2 次</strong>（对标国际站周均 2 次），稳态营销费用翻倍至 ≈ €19,400/月（合计 ≈ €19,500–19,900/月，年化 ≈ €234k–239k），AB2 产出同步翻倍（≥ 17.6/日）——费用与 AB2 近似线性，单 AB2 成本不变；③ 系统消息按窗口外全额保守计费——若命中 24h 客服窗口则免费，实际费用低于上限；营销消息基本均在窗口外（主动触达，买家近期无对话），按 Marketing 单价全额计费；④ 系统消息稳态量级（100–440/日）及订阅覆盖率爬坡（2026-10 ~30% → 2027-03 全量）均为估算，待 AB2 conversations analysis 实测锁定；⑤ 稳态单 AB2 通道成本 ≈ €37（稳态月费用 ÷ 月 AB2 265 个，仅 Meta 模板费，每周 1 次档，与订阅规模无关）；爬坡期单 AB2 成本 ≈ €38（累计费用 ÷ 累计 AB2 829 个）；Alibaba 国际站整体 CPUV $0.1 / CPPB $11.4（含其他成本，仅参照量级）；⑥ <strong>订阅 onboarding（一次性，订阅成功 T+0 1 条）</strong>：财年累计 ≤ 35,000 条，按 Utility 计 ≈ €1,200、判 Marketing 则 ≈ €3,900（模板类别待 Meta 审核）；不入月度主表，叠加后爬坡期累计 ≈ €32,200–36,200。</p>
 </blockquote>
 <hr>
-<h2>八、里程碑</h2>
+<h2 id="sec-50">八、里程碑</h2>
 <table>
 <thead>
 <tr>
@@ -1576,12 +1674,12 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tbody>
 </table>
 <hr>
-<h2>九、附录</h2>
-<h3>9.1 漏斗口径与关键假设（推导细节）</h3>
+<h2 id="sec-51">九、附录</h2>
+<h3 id="sec-52">9.1 漏斗口径与关键假设（推导细节）</h3>
 <p><strong>漏斗口径与关键假设</strong>：漏斗自发送起均为<strong>日均值</strong>。关键假设：可触达率 <strong>60%</strong>（Visable 从 0 做 double opt-in，订阅质量高于 Alibaba 混合授权实测 40%）、营销频次<strong>每周 1 轮</strong>（日发送率 14%，7 天轮一遍全池；对标国际站 FY26 周均 2 次，欧洲合规从低起步）、CTR 10% × 衰减系数 0.6 = <strong>6%</strong>（频次提升后打开率下降，国际站 FY26 目标口径）、UV→AB 20%、AB→AB2 25%（实测基线验证：buyer response to positive connection 现为 QDR wlw 18%/ep 36%、RFQ wlw 33%/ep 28%，25% 落在区间内，PRD_Reminder 口径）。按日均口径推导（<strong>目标：日均 AB2 ≥ 8</strong>）：订阅 35,000 → 可触达 21,000（×60%）→ 日均发送 2,940（×14%）→ 日均 UV 176（×6%）→ 日均 AB 35（×20%）→ <strong>日均 AB2 8.8（×25%）</strong>。<strong>达标订阅基线：8 ÷ 25% ÷ 20% ÷ 6% ÷ 14% ÷ 60% ≈ 31,700</strong>——订阅目标 35,000 = 达标线 110% 缓冲（CTR 衰减到 5.5% 仍保 8 个；若只到 32,000 恰好达标）。订阅目标从 67,000 降至 35,000 的依据：原 67,000 隐含&quot;25 天一轮&quot;的慢频次口径，频次提到每周 1 轮后达标订阅需求自然腰斩（日均新增 316 → 165，DAU 4.5w 转化 0.70% → 0.37%）；若频次 A/B 后切周 2 次（28%/日），达标基线进一步降至 ~16,000。</p>
 <p><strong>敏感性</strong>：频次是 AB2 产出的最大杠杆（双周 7%/日 → 每周 14%/日 → 周 2 次 28%/日，发送量线性翻倍，AB2 同步翻倍；CTR 按 0.6 衰减系数保守折算，若实测衰减更缓则产出更高）。订阅基线 35,000 不变时：周 2 次档日均 AB2 ≈ 17.6。若订阅爬坡不及预期（只到 32,000），每周 1 次口径仍恰可达标 AB2 = 8；若到 16,000，需周 2 次频次 + 实测 CTR ≥ 6% 双条件。反之若可触达率实测低于 60%，订阅基线需相应上调。</p>
 <p><strong>系统消息漏斗（事件驱动，非圈人）</strong>：催复 / conversation 提醒不依赖订阅池爬坡——AB 基线（现有 positive connections 日均量，AB2 conversations analysis 数据）→ WhatsApp 已订阅覆盖率（系统消息一级 opt-in 即可）→ 催复触达（次日 wlw 10am / ep 9am，每 request 一次）→ buyer response 率提升 2pp（PRD 目标）→ AB2 增量。贡献下限 ≥ 3 个/日，具体数值以 AB 基线测算锁定。</p>
-<h3>9.2 Alibaba 国际站实测（可行性佐证明细）</h3>
+<h3 id="sec-53">9.2 Alibaba 国际站实测（可行性佐证明细）</h3>
 <table>
 <thead>
 <tr>
@@ -1646,7 +1744,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 <blockquote>
 <p>解读：一期是&quot;跑通链路&quot;的量级，不是规模化量级。订阅 35,000（财年底累计，日均新增 ≈ 165）是日均 AB2 ≥ 8 的目标基线（达标线 32,000 的 110% 缓冲），订阅收集仍是重中之重（欧洲授权严格，国际站累积了 1.5 年+，Visable 要从 0 开始），但压力已从原 67,000（日均新增 ≈ 316）显著降低。可触达率按 60% 假设（double opt-in 订阅质量更高，Alibaba 实测 40% 为保守下限），需数据侧验证；若实际低于 60%，订阅基线需相应上调。</p>
 </blockquote>
-<h3>9.3 术语表</h3>
+<h3 id="sec-54">9.3 术语表</h3>
 <table>
 <thead>
 <tr>
@@ -1673,7 +1771,7 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 </tr>
 </tbody>
 </table>
-<h3>9.4 参考资料</h3>
+<h3 id="sec-55">9.4 参考资料</h3>
 <table>
 <thead>
 <tr>
@@ -1727,4 +1825,26 @@ Direct Meta Cloud API (reuse existing channel, dedicated number + display name)
 
 
 <div class="footer">WhatsApp Buyer Messaging Strategy (Phase 1) BRD · v1.2 · 2026-08-17 · Jolyne Zhang (Lifecycle / Buyer Side)</div>
+
+</div>
+<script>
+// scrollspy: 高亮当前章节
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var ids = Object.keys(map);
+  function onScroll(){
+    var cur = ids[0];
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (el && el.getBoundingClientRect().top <= 96) cur = ids[i];
+    }
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (map[cur]) map[cur].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
 </body></html>
