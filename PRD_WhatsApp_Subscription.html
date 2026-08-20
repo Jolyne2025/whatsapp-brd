@@ -353,6 +353,62 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>退订率</td><td>退订数 / 订阅数</td><td>—</td><td>< 5%</td></tr>
 <tr><td>营销漏斗产出</td><td>圈人 → UV → AB → AB2</td><td>AB→AB2 实测 30.6%（Redash，> 假设 25%）</td><td>日均 UV ≥ 160 → 日均 AB2 ≥ 5（UC-419 口径）</td></tr>
 </table>
+<h4>9.1.1 风险情景重测（2026-08-20 校准版）</h4>
+<blockquote><strong>背景</strong>：上位 PRD v0.2 发布后，经逐指标审视，发现三项假设偏松：点位 2（验证后询问）8%×65% 对标国际站订单页 2% 偏高、点位 3（注册勾选）5%×65% 为默认勾选 10% 折半但未考虑"默认不勾选 + double opt-in"的双重衰减、二级确认率 65% 无对标实证。本次校准调整三点并做三情景模拟，结果需认真对待。</blockquote>
+<table>
+<tr><th>项目</th><th>保守</th><th>基准（校准）</th><th>乐观</th><th>说明</th></tr>
+<tr><td>点位 1 一级同意率</td><td>10%</td><td>15%</td><td>20%</td><td>不变（国际站 8.6% 最终订阅率对应 15%×60%=9% 吻合）</td></tr>
+<tr><td>点位 2 一级同意率</td><td><strong>4%</strong>（↓原 6%）</td><td><strong>5%</strong>（↓原 8%）</td><td><strong>8%</strong>（↓原 10%）</td><td>校准：国际站订后页 2% + 验证场景溢价 2pp（灰度期实测校核）</td></tr>
+<tr><td>点位 3 一级同意率</td><td><strong>2%</strong>（↓原 3%）</td><td><strong>3%</strong>（↓原 5%）</td><td><strong>5%</strong>（↓原 7%）</td><td>校准：默认不勾选的实际勾选率在 B2B 场景中通常 1-3%</td></tr>
+<tr><td>二级确认完成率（L3）</td><td><strong>55%</strong>（↓原 60%）</td><td><strong>60%</strong>（↓原 65%）</td><td><strong>65%</strong>（↓原 70%）</td><td>校准：国际站绑定码无流失数据 → 从严取 60% 为中位</td></tr>
+<tr><td>去重系数</td><td>0.70</td><td>0.75</td><td>0.80</td><td>三点位人群高度重叠（询盘者几乎 100% 已验证+注册）</td></tr>
+</table>
+<p>稳态日均产出计算（示例基准）：</p>
+<table>
+<tr><th>点位</th><th>曝光/日</th><th>L2×L3</th><th>日均产出</th><th>去重后</th></tr>
+<tr><td>1 询盘弹窗</td><td>1,083</td><td>15%×60%=9.0%</td><td>97.5/日</td><td>—</td></tr>
+<tr><td>2 验证后询问</td><td>887</td><td><strong>5%</strong>×60%=<strong>3.0%</strong></td><td>26.6/日</td><td>—</td></tr>
+<tr><td>3 注册勾选</td><td>946</td><td><strong>3%</strong>×60%=<strong>1.8%</strong></td><td>17.0/日</td><td>—</td></tr>
+<tr><td>合计</td><td>2,916</td><td>加权 8.06%×60%=<strong>4.84%</strong></td><td>141.1/日</td><td>×0.75=<strong>105.8/日</strong></td></tr>
+</table>
+<p><strong>212 天累计（三段式 + SC 存量激活）</strong>：</p>
+<table>
+<tr><th>时段</th><th>天数</th><th>保守</th><th>基准</th><th>乐观</th></tr>
+<tr><td>9 月灰度（DE 单点位）</td><td>30</td><td>10/日 → 300</td><td>20/日 → 600</td><td>30/日 → 900</td></tr>
+<tr><td>10 月全量爬坡（80%）</td><td>31</td><td>50/日 → 1,553</td><td>85/日 → 2,625</td><td>139/日 → 4,318</td></tr>
+<tr><td>11-3 月稳态</td><td>151</td><td>63/日 → 9,459</td><td>106/日 → 15,980</td><td>174/日 → 26,293</td></tr>
+<tr><td><strong>站内累计</strong></td><td><strong>212</strong></td><td><strong>11,312</strong></td><td><strong>19,205</strong></td><td><strong>31,512</strong></td></tr>
+<tr><td>+ SC 存量激活</td><td>10-3 月</td><td>0.3%/月→1,644</td><td><strong>0.8%/月→6,576</strong></td><td>1.2%/月→9,864</td></tr>
+<tr><td><strong>总计</strong></td><td>—</td><td><strong>12,956</strong></td><td><strong>25,781</strong></td><td><strong>41,376</strong></td></tr>
+<tr><td><strong>vs 35,000</strong></td><td>—</td><td>✗ <strong>缺口 22,044（37%）</strong></td><td>✗ <strong>缺口 9,219（74%）</strong></td><td>✓ <strong>超额 6,376（118%）</strong></td></tr>
+</table>
+<blockquote>⚠ <strong>核心结论</strong>：即使基准情景（假设已从严校准），站内新触点 + SC 存量也只贡献 ~25,800（74%），距 35,000 缺口 ~9,200。<strong>与 v0.2 原文（26-27k+5-10k=31-37k，可达标）相比，本版更如实反映风险——假设收紧后基准不再可达标，需要乐观情景或 B 计划。</strong></blockquote>
+<h4>9.1.2 达标条件反推与缓解路径</h4>
+<p><strong>要达到 35,000 必须同时满足</strong>：</p>
+<table>
+<tr><th>条件</th><th>要求</th><th>当前假设</th><th>差距</th></tr>
+<tr><td>点位 1 一级同意率</td><td><strong>≥18-19%</strong>（基准 15% 不够）</td><td>基准 15%</td><td>需灰度实测证实 ≥18% 方可确认 10 月全量基准轨道</td></tr>
+<tr><td>点位 2+3 一级同意率均值</td><td>≥5%（从严校准后点位 2 为 5%、点位 3 为 3%）</td><td>校准后 4%</td><td>灰度期后若实测偏低，缺口扩大</td></tr>
+<tr><td>二级确认完成率</td><td>≥60%</td><td>60%</td><td>需实测确认，若 <60% 则每日损失 ~15/日（212 天 ≈ 3,000）</td></tr>
+<tr><td>SC 存量激活率</td><td><strong>≥1%/月</strong>（活跃池 13.7w）</td><td>0.8%/月</td><td>0.8→1% 增加 ~2,744 = 差距缩减至 ~6,500</td></tr>
+<tr><td>全量上线时间</td><td><strong>10 月 1 日前</strong></td><td>待定</td><td><strong>每延迟 1 周损失 ~590</strong>（稳态日均 × 7 × 80%）</td></tr>
+</table>
+<p><strong>B 计划（若 9 月灰度不达标）</strong>：</p>
+<table>
+<tr><th>触发条件</th><th>措施</th><th>预期增量</th></tr>
+<tr><td>点位 1 一级同意 <15%</td><td>优惠券/首单激励绑定弹窗（弹窗内加"首次询盘回复提醒即享 €X 优惠"）</td><td>+3-5pp → 可达 18-20%</td></tr>
+<tr><td>二级确认 <60%</td><td>短信兜底 + 24h 内二次模板消息提醒</td><td>+5-10pp → 60-65%</td></tr>
+<tr><td>SC 激活 <1%/月</td><td>站内 PUSH 引导 + 注册成功页/设置页强引导 SC 入口（非仅设置菜单深层）</td><td>+0.3-0.5pp/月</td></tr>
+<tr><td>站内三触点缺口 >5k</td><td>原 P2（登录页入口 / 站外 IG/FB 落地页）<strong>提前到 P1</strong>，11 月上线</td><td>+3-5k/212 天</td></tr>
+<tr><td>上述措施仍不够</td><td>调整 35,000 目标（与 UC-419 对齐降 AB2 预期）或追加预算做站外广告引流订阅</td><td>—</td></tr>
+</table>
+<p><strong>灰度期（9 月 DE）的决策节点</strong>：</p>
+<table>
+<tr><th>节点</th><th>动作</th></tr>
+<tr><td>9 月中（第 2 周）</td><td>初步评估点位 1 一级同意率 → 若显著 <15%，提前启动 B 计划措施 1（激励弹窗）</td></tr>
+<tr><td>9 月底</td><td>全月数据分析：① 点位 1 一级同意率 ② double opt-in 完成率 ③ DE 转化率 vs 假设（10-20%）→ 判定 10 月全量基于哪一情景</td></tr>
+<tr><td>10 月初</td><td>若基准达标（同意 ≥15%、二级 ≥60%），全量放量；若低于，同步启动 B 计划措施 1+2+3；若严重低于（同意 <10%），启动措施 4（提前 P2）</td></tr>
+</table>
 <h3>9.2 灰度期（9 月 DE 单点位）验收标准</h3>
 <table>
 <tr><th>验收项</th><th>通过条件</th><th>通过后动作</th></tr>
