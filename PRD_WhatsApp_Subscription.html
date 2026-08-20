@@ -112,6 +112,9 @@ a { color: #0969da; text-decoration: none; }
 <ul>
 <li><strong>设计理由</strong>：① 用户刚提交询盘，有明确的回复期待，授权意愿最高；② <strong>国际站实测锚点</strong>：沟通页弹窗最终订阅率 8.6%（1v1 沟通后 ab3 152k → 授权 13k），与本测算基准 15%×65%=9.75% 高度吻合——<strong>该点位是唯一有国际站同场景实测背书的高转化点位</strong>；③ 场景绑定授权（"接收询盘回复提醒"）是合规最强形态，与系统消息（conversation 提醒）同源，一次授权可同时服务系统消息一级 opt-in 与营销二级确认入口；④ 灰度期只做这一个点位，链路最短、变量最少，便于评估 double opt-in 完成率。</li>
 <li><strong>曝光基数（Redash 实测）</strong>：1,083 req/日（QDR 855 + RFQ 228，剔除 7/22–24 异常日），去重后 592 buyer/日——<strong>远高于反推所需 1,693/日曝光的一半以上，瓶颈在转化率而非流量</strong>。</li>
+</ul>
+<blockquote><strong>口径说明</strong>：上述 592 buyer/日含 Nexus（<code>request_origin='alibaba'</code>）——Nexus 询盘发生在 Alibaba.com 场域，Visable 无法在那做订阅弹窗，应予排除。按 Visable 看板标准口径（<code>request_origin IN ('app','web')</code>），Nexus 约占 AB 层询盘买家的 ~25%，修正后 Visable 站内可用曝光基数约 <strong>810–840 req/日、440–450 buyer/日</strong>（待 Redash 精确取数后校准）。修正后的曝光基数仍高于反推所需的单点点位需求（~730/日），但缓冲空间大幅收窄。</blockquote>
+<ul>
 <li><strong>留证</strong>：consent_id、用户 id、点位标识、同意时间、文案版本号、设备信息、IP 国家（不存原始 IP）。</li>
 <li><strong>弹窗形态对标实拍</strong>（国际站沟通页弹窗三变体——8.6% 转化锚点的 UI 依据，均已在 §2.1 图集列示）：</li>
 </ul>
@@ -344,7 +347,7 @@ a { color: #0969da; text-decoration: none; }
 <h3>9.1 订阅漏斗指标（按点位拆分，含实测基线）</h3>
 <table>
 <tr><th>指标</th><th>口径</th><th>实测/假设基线</th><th>目标</th></tr>
-<tr><td>触点曝光（L1）</td><td>询盘 1,083 req/日、验证 887/日、注册 946/日（Redash 实测）</td><td>合计 2,916/日（去重前）</td><td>≥ 反推所需 1,693/日 ✓ 充足</td></tr>
+<tr><td>触点曝光（L1）</td><td>询盘 1,083 req/日（含 Nexus，Visable 站内可用 ≈ <strong>810–840 req/日</strong>）、验证 887/日、注册 946/日（Redash 实测）</td><td>合计 2,916/日（去重前）；修正 Visable 站内 ≈ <strong>2,640–2,670/日</strong></td><td>≥ 反推所需 <strong>1,693/日</strong> ⚠ 含 Nexus 的原数（2,916）充足，修正后（~2,650）紧平衡</td></tr>
 <tr><td>一级同意转化率（L2）</td><td>触点曝光 → 点击授权</td><td>点位 1：10–20%（基准 15%，对标沟通页 8.6% 最终订阅吻合）；点位 2：6–10%（基准 8%，偏高需校准）；点位 3：3–7%（基准 5%，10% 从严折半）</td><td>灰度期（9 月）定基线：<strong>点位 1 同意 ≥15%</strong></td></tr>
 <tr><td>double opt-in 完成率（L3）</td><td>一级同意 → 二级确认完成</td><td>60–70%（基准 65%；对标国际站可触达 40% 的质量溢价）</td><td><strong>≥ 60%</strong></td></tr>
 <tr><td>订阅爬坡</td><td>财年底累计</td><td>基准 26–27k + 存量激活 5–10k（活跃池 13.7w × 0.5–1%/月）</td><td>≥ 35,000（日均新增 ≈ 165）</td></tr>
@@ -366,32 +369,33 @@ a { color: #0969da; text-decoration: none; }
 <p>稳态日均产出计算（示例基准）：</p>
 <table>
 <tr><th>点位</th><th>曝光/日</th><th>L2×L3</th><th>日均产出</th><th>去重后</th></tr>
-<tr><td>1 询盘弹窗</td><td>1,083</td><td>15%×60%=9.0%</td><td>97.5/日</td><td>—</td></tr>
+<tr><td>1 询盘弹窗</td><td><strong>825</strong>（↓排除 Nexus ~25%）</td><td>15%×60%=9.0%</td><td><strong>74.3/日</strong></td><td>—</td></tr>
 <tr><td>2 验证后询问</td><td>887</td><td><strong>5%</strong>×60%=<strong>3.0%</strong></td><td>26.6/日</td><td>—</td></tr>
 <tr><td>3 注册勾选</td><td>946</td><td><strong>3%</strong>×60%=<strong>1.8%</strong></td><td>17.0/日</td><td>—</td></tr>
-<tr><td>合计</td><td>2,916</td><td>加权 8.06%×60%=<strong>4.84%</strong></td><td>141.1/日</td><td>×0.75=<strong>105.8/日</strong></td></tr>
+<tr><td>合计</td><td><strong>2,658</strong></td><td>加权 7.39%×60%=<strong>4.44%</strong></td><td><strong>117.9/日</strong></td><td>×0.75=<strong>88.4/日</strong></td></tr>
 </table>
+<blockquote>⚠ <strong>注</strong>：点位 1 曝光从 1,083 修正至 825——排除 Nexus（<code>request_origin='alibaba'</code>），该部分询盘在 Alibaba.com 场域发生、Visable 无法弹窗。修正后总曝光从 2,916 降至 2,658，仍高于反推所需 1,693/日。最终达标能力变化见下。</blockquote>
 <p><strong>212 天累计（三段式 + SC 存量激活）</strong>：</p>
 <table>
 <tr><th>时段</th><th>天数</th><th>保守</th><th>基准</th><th>乐观</th></tr>
-<tr><td>9 月灰度（DE 单点位）</td><td>30</td><td>10/日 → 300</td><td>20/日 → 600</td><td>30/日 → 900</td></tr>
-<tr><td>10 月全量爬坡（80%）</td><td>31</td><td>50/日 → 1,553</td><td>85/日 → 2,625</td><td>139/日 → 4,318</td></tr>
-<tr><td>11-3 月稳态</td><td>151</td><td>63/日 → 9,459</td><td>106/日 → 15,980</td><td>174/日 → 26,293</td></tr>
-<tr><td><strong>站内累计</strong></td><td><strong>212</strong></td><td><strong>11,312</strong></td><td><strong>19,205</strong></td><td><strong>31,512</strong></td></tr>
+<tr><td>9 月灰度（DE 单点位）</td><td>30</td><td>8/日 → 240</td><td>17/日 → 510</td><td>25/日 → 750</td></tr>
+<tr><td>10 月全量爬坡（80%）</td><td>31</td><td>42/日 → 1,302</td><td>70/日 → 2,170</td><td>118/日 → 3,658</td></tr>
+<tr><td>11-3 月稳态</td><td>151</td><td>53/日 → 8,003</td><td>88/日 → 13,288</td><td>147/日 → 22,197</td></tr>
+<tr><td><strong>站内累计</strong></td><td><strong>212</strong></td><td><strong>9,545</strong></td><td><strong>15,968</strong></td><td><strong>26,605</strong></td></tr>
 <tr><td>+ SC 存量激活</td><td>10-3 月</td><td>0.3%/月→1,644</td><td><strong>0.8%/月→6,576</strong></td><td>1.2%/月→9,864</td></tr>
-<tr><td><strong>总计</strong></td><td>—</td><td><strong>12,956</strong></td><td><strong>25,781</strong></td><td><strong>41,376</strong></td></tr>
-<tr><td><strong>vs 35,000</strong></td><td>—</td><td>✗ <strong>缺口 22,044（37%）</strong></td><td>✗ <strong>缺口 9,219（74%）</strong></td><td>✓ <strong>超额 6,376（118%）</strong></td></tr>
+<tr><td><strong>总计</strong></td><td>—</td><td><strong>11,189</strong></td><td><strong>22,544</strong></td><td><strong>36,469</strong></td></tr>
+<tr><td><strong>vs 35,000</strong></td><td>—</td><td>✗ <strong>缺口 23,811（32%）</strong></td><td>✗ <strong>缺口 12,456（64%）</strong></td><td>✓ <strong>1,469（104%）</strong></td></tr>
 </table>
-<blockquote>⚠ <strong>核心结论</strong>：即使基准情景（假设已从严校准），站内新触点 + SC 存量也只贡献 ~25,800（74%），距 35,000 缺口 ~9,200。<strong>与 v0.2 原文（26-27k+5-10k=31-37k，可达标）相比，本版更如实反映风险——假设收紧后基准不再可达标，需要乐观情景或 B 计划。</strong></blockquote>
+<blockquote>⚠ <strong>核心结论</strong>：排除 Nexus 后，基准情景仅贡献 ~22,500（64%），距 35,000 缺口 ~12,500。<strong>乐观勉强超标（104%）但条件苛刻</strong>：点位 1 ≥20%、点位 2+3 均值 ≥5%、L3 ≥60%、SC ≥1.2%/月、10/1 前全量。任一未达则落入基准轨道。<strong>B 计划（· 9.1.2）从 gap 12,500 必须启动。</strong></blockquote>
 <h4>9.1.2 达标条件反推与缓解路径</h4>
 <p><strong>要达到 35,000 必须同时满足</strong>：</p>
 <table>
 <tr><th>条件</th><th>要求</th><th>当前假设</th><th>差距</th></tr>
-<tr><td>点位 1 一级同意率</td><td><strong>≥18-19%</strong>（基准 15% 不够）</td><td>基准 15%</td><td>需灰度实测证实 ≥18% 方可确认 10 月全量基准轨道</td></tr>
-<tr><td>点位 2+3 一级同意率均值</td><td>≥5%（从严校准后点位 2 为 5%、点位 3 为 3%）</td><td>校准后 4%</td><td>灰度期后若实测偏低，缺口扩大</td></tr>
-<tr><td>二级确认完成率</td><td>≥60%</td><td>60%</td><td>需实测确认，若 <60% 则每日损失 ~15/日（212 天 ≈ 3,000）</td></tr>
-<tr><td>SC 存量激活率</td><td><strong>≥1%/月</strong>（活跃池 13.7w）</td><td>0.8%/月</td><td>0.8→1% 增加 ~2,744 = 差距缩减至 ~6,500</td></tr>
-<tr><td>全量上线时间</td><td><strong>10 月 1 日前</strong></td><td>待定</td><td><strong>每延迟 1 周损失 ~590</strong>（稳态日均 × 7 × 80%）</td></tr>
+<tr><td>点位 1 一级同意率</td><td><strong>≥20-21%</strong>（基准 15% 不够；修正曝光后产出降 23%）</td><td>基准 15%</td><td>需灰度实测证实 ≥20% 方可确认 10 月全量轨道；若 15%，缺口扩大 ~3,500</td></tr>
+<tr><td>点位 2+3 一级同意率均值</td><td>≥5%</td><td>校准后 4%</td><td>灰度期后若实测偏低，缺口扩大</td></tr>
+<tr><td>二级确认完成率</td><td>≥60%</td><td>60%</td><td>需实测，若 <55% 则损失 ~15/日（212 天 ≈ 3,000）</td></tr>
+<tr><td>SC 存量激活率</td><td><strong>≥1.2%/月</strong>（活跃池 13.7w）</td><td>0.8%/月</td><td>若仅 0.5%→缺口扩大 ~3,200；1.2%→增 ~2,744</td></tr>
+<tr><td>全量上线时间</td><td><strong>10 月 1 日前</strong></td><td>10 月爬坡</td><td><strong>每延迟 1 周损失 ~500</strong>（稳态日均 88×7×80%）</td></tr>
 </table>
 <p><strong>B 计划（若 9 月灰度不达标）</strong>：</p>
 <table>
