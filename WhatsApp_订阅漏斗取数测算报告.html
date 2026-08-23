@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WhatsApp 订阅漏斗测算报告 v3</title>
+<style>
+:root { --accent: #1a7f37; --border: #d0d7de; --bg: #f6f8fa; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+       max-width: 960px; margin: 0 auto; padding: 24px 32px 80px;
+       color: #1f2328; line-height: 1.7; background: #fff; }
+h1 { font-size: 26px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+h2 { font-size: 20px; margin-top: 36px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { font-size: 17px; margin-top: 26px; color: #0a3069; }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 13.5px;
+        background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 600; white-space: nowrap; }
+tr:nth-child(even) td { background: #fafbfc; }
+blockquote { border-left: 4px solid #d4a72c; background: #fff8e6; margin: 12px 0;
+             padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13.5px; color: #5b4a00; }
+code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+li { margin: 4px 0; }
+a { color: #0969da; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>WhatsApp 订阅漏斗测算报告（重构版 v3）</h1>
+<table>
+<tr><th>项</th><th>内容</th></tr>
+<tr><td>日期</td><td>2026-08-19</td></tr>
+<tr><td>作者</td><td>Jolyne Zhang（Lifecycle / 买家侧）</td></tr>
+<tr><td>数据窗口</td><td>2026-07-20 ~ 2026-08-16（28 天，T-3 口径）</td></tr>
+<tr><td>数据源</td><td>Redash（Redshift prd）：metrics_layer.ga_user_metrics / active_buyers、reporting.fact_user_profile、analytics.v_active_buyers</td></tr>
+<tr><td>对标基线</td><td>Alibaba 国际站语雀订阅方案（2026-08-19 浏览器实读 6 篇：入口整理/手机号订阅 PRD/竞品调研/WhatsApp 手册/订单页 BRD/订阅增长策略 BRD）</td></tr>
+<tr><td>关联文档</td><td>BRD v1.2（订阅 35,000、可触达 60%、日均新增 ≈165）；PRD 订阅点位设计 v0.1</td></tr>
+</table>
+<hr/>
+<h2>0. 结论速览（TL;DR）</h2>
+<p><strong>测算问题</strong>：212 天内（2026-09-01 ~ 2027-03-31）积累 35,000 有效订阅，靠什么实现、缺口在哪？</p>
+<p><strong>答案（基准场景）</strong>：</p>
+<ol>
+<li><strong>站内三新触点（询盘弹窗 / 验证后询问 / 注册勾选）贡献 ≈ 26,000–27,000</strong>，距目标缺口 <strong>8,000–9,000（23–26%）</strong>——仅靠新增触达不到标；</li>
+<li><strong>缺口由 Subscription Center 存量激活补足</strong>：存量已验证用户 360w 中，<strong>真实活跃用户仅 ≈ 13.7w（3.8%）</strong>，按活跃池 0.5–1%/月激活可补 <strong>5,000–10,000</strong> → 基准 + 存量 ≈ <strong>31,000–37,000，可达标但有前提</strong>（SC 上线 + 站内引导 + 激活率达标）；</li>
+<li><strong>灰度期（9 月 DE 单点位）不是拉量期</strong>：日均 10–30，累计 300–900，核心是验证转化率（询盘弹窗一级同意 ≥15% 且 double opt-in 完成 ≥60%，则 10 月全量放量的基准场景成立）；</li>
+<li>结果侧实测 <strong>AB→AB2 = 30.6%</strong>，优于 BRD 假设 25%，留出缓冲。</li>
+</ol>
+<hr/>
+<h2>1. 订阅漏斗模型（全报告的坐标系）</h2>
+<p>35,000 目标落在第 4 层（有效订阅）。各层口径：</p>
+<table>
+<tr><th>层</th><th>定义</th><th>口径 / 来源</th></tr>
+<tr><td>L1 触点曝光</td><td>用户遇到订阅入口的次数</td><td>实测：询盘 1,083/日、验证 887/日、注册 946/日</td></tr>
+<tr><td>L2 一级同意</td><td>站内授权（opt-in），默认不勾选</td><td>假设（点位场景差异，见 §5.1）</td></tr>
+<tr><td>L3 二级确认</td><td>double opt-in 完成（WhatsApp 模板/短信回执）</td><td>假设 60–70%</td></tr>
+<tr><td><strong>L4 有效订阅</strong></td><td>订阅态 subscribed（<strong>35,000 目标所在层</strong>）</td><td>= L2 × L3</td></tr>
+<tr><td>L5 可触达</td><td>有效订阅中可发营销消息</td><td>BRD：60%（从严授权 → 质量高于国际站 40%）</td></tr>
+<tr><td>L6 发送→AB2</td><td>每周 1 轮 14%/日 → 打开 → 询盘回复</td><td>UC-419：日均 AB2 ≥5，北极星 ≥8</td></tr>
+</table>
+<hr/>
+<h2>2. 目标反推（自顶向下）：35,000 需要什么</h2>
+<table>
+<tr><th>反推步骤</th><th>公式</th><th>结果</th></tr>
+<tr><td>日均有效订阅</td><td>35,000 ÷ 212 天</td><td><strong>≈ 165/日</strong></td></tr>
+<tr><td>日均一级同意</td><td>165 ÷ 65%（二级确认率）</td><td>≈ 254/日</td></tr>
+<tr><td>日均所需触点曝光</td><td>254 ÷ 15%（基准一级同意率）</td><td>≈ 1,693/日</td></tr>
+<tr><td>现有三新触点曝光合计（去重前）</td><td>1,083 + 887 + 946</td><td>≈ 2,916/日</td></tr>
+</table>
+<blockquote>曝光量级充足（2,916 >> 1,693），<strong>瓶颈在转化率</strong>：一级同意率从 15% 每降 5pp，日均缺口 ≈ 70 订阅（212 天 ≈ 1.5 万）。</blockquote>
+<hr/>
+<h2>3. 国际站语雀方案对标（自底向上的参考基线）</h2>
+<p>来源：语雀 7 篇（[BRD] WhatsApp 渠道触达策略、WhatsApp 年度总结、FY25 触达策略等）。</p>
+<table>
+<tr><th>漏斗层</th><th>国际站实测</th><th>Visable 假设</th><th>差异说明</th></tr>
+<tr><td>订阅入口</td><td>站内 4（登录/注册/订阅管理/验证手机号）+ 站外 IG/FB</td><td>一期 3 站内（询盘弹窗/验证后询问/注册勾选）+ Subscription Center（P1）</td><td>一一对应，登录页入口一期未做（P2）</td></tr>
+<tr><td>授权形态</td><td>单次授权 = 永久订阅；默认文案勾选</td><td><strong>double opt-in，默认不勾选</strong></td><td>欧洲合规从严（GDPR Art.7 + UWG），转化率必然低于国际站</td></tr>
+<tr><td>绑定弹窗转化</td><td>弹窗类 5–10% 级；<strong>沟通页弹窗实测 8.6%、注册联动实测 10%、订后页 2%、首页大曝光仅 0.2–0.4%</strong></td><td>询盘弹窗 10–20%、验证后 6–10%、注册勾选 3–7%</td><td><strong>意图越高转化越高</strong>：点位 1（高意图）取国际站沟通页 8.6% 之上的区间；点位 3（低意图+默认不勾选）从严折半</td></tr>
+<tr><td>订阅→可触达</td><td><strong>40%</strong>（500w → 200w）</td><td><strong>60%</strong></td><td>从严授权 → 订阅质量更高，待数据侧验证</td></tr>
+<tr><td>日均新增</td><td>5k/日（峰值绑定 1.1w/日）</td><td>165/日</td><td>国际站的 3.3%，量级合理</td></tr>
+<tr><td>时间线</td><td>1.5 年+ 累积 500w</td><td>212 天 35k</td><td><strong>漏斗是慢变量</strong>：入口铺设要从一期开始</td></tr>
+<tr><td>欢迎流</td><td>首次订阅问候：点击率预计 50%、日均 6,000 UV</td><td>T+0 欢迎消息 ×1 + 7 天冷却</td><td>一致</td></tr>
+<tr><td>退订</td><td>站内订阅管理 + STOP/Unsubscribe</td><td>Subscription Center + STOP/UNSUBSCRIBE/ABMELDEN</td><td>一致</td></tr>
+</table>
+<hr/>
+<h2>4. Visable 实测：漏斗输入侧与存量池（Redash，28 天日均）</h2>
+<h3>4.1 触点曝光（L1 输入，对应三个新点位）</h3>
+<table>
+<tr><th>触点（点位）</th><th>指标</th><th>表/口径</th><th>ep</th><th>wlw</th><th>合计/日</th></tr>
+<tr><td>曝光基数</td><td>Web UV</td><td>ga_user_metrics COUNTD(visitor_sk)</td><td>20,224</td><td>19,360</td><td><strong>39,584</strong></td></tr>
+<tr><td>点位 3 注册勾选</td><td>新注册</td><td>fact_user_profile created_at</td><td>820</td><td>125</td><td><strong>946</strong></td></tr>
+<tr><td>点位 2 验证后询问</td><td>手机号验证</td><td>fact_user_profile verified_at</td><td>770</td><td>117</td><td><strong>887</strong></td></tr>
+<tr><td>点位 1 询盘弹窗</td><td>询盘 QDR</td><td>active_buyers is_ab2=false</td><td>—</td><td>—</td><td>855 req / 403 buyer</td></tr>
+<tr><td>点位 1 询盘弹窗</td><td>询盘 RFQ</td><td>同上</td><td>—</td><td>—</td><td>228 req / 189 buyer</td></tr>
+<tr><td><strong>点位 1 合计</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td><strong>1,083 req / 592 buyer</strong></td></tr>
+</table>
+<blockquote>① 已剔除 2026-07-22~24 三个异常日（QDR 日提交 6,000–8,300，疑似刷量/回填，约正常日 6–8 倍，需数据侧排查）；② 三点位人群有重叠（询盘者多为已验证/注册用户），测算用去重系数处理（§5.1）。</blockquote>
+<h3>4.2 存量池（Subscription Center 的激活基础）——本次关键修正</h3>
+<table>
+<tr><th>存量口径（created_at ≥ 2024-01-01）</th><th>ep</th><th>wlw</th><th>合计</th></tr>
+<tr><td>总用户</td><td>330.4w</td><td>79.7w</td><td><strong>410w</strong></td></tr>
+<tr><td>已验证（is_verified）</td><td>325.6w</td><td>34.3w</td><td><strong>≈ 360w</strong></td></tr>
+<tr><td>已验证 + 有登录记录（first_login_at）</td><td>10.6w</td><td>3.1w</td><td><strong>≈ 13.7w（3.8%）</strong></td></tr>
+</table>
+<blockquote><strong>修正 v1 的关键发现</strong>：存量 360w 中仅 3.8% 有登录记录（其余为导入/批量账号，无活跃行为）——<strong>Subscription Center 激活的现实池子是 ~13.7w 而非 360w</strong>。激活测算须按活跃池基数：0.5%/月 → 685/月（≈23/日），1%/月 → 1,370/月（≈45/日），212 天累计 ≈ 5,000–10,000。 另：has_phone 字段在新增与存量中均为 100% 覆盖（无区分度），<strong>不能作为"可 WhatsApp 触达"口径</strong>；可触达判定只能依赖 is_verified + 活跃行为。</blockquote>
+<h3>4.3 结果侧锚点（L6 基线，验证漏斗假设）</h3>
+<table>
+<tr><th>指标</th><th>表/口径</th><th>日均</th><th>备注</th></tr>
+<tr><td>AB 层（QDR + RFQ）</td><td>active_buyers is_ab2=false</td><td><strong>592 buyers / 1,083 req</strong></td><td>点位 1 每日直接曝光池</td></tr>
+<tr><td>AB2 层</td><td>active_buyers is_ab2=true（buyer 首次回复日）</td><td><strong>181 buyers</strong>（QDR 94 + RFQ 87）</td><td><strong>AB→AB2 = 30.6% > BRD 假设 25% ✓</strong></td></tr>
+</table>
+<blockquote>结果侧比预期好：营销漏斗的达标线（AB2 ≥5/日）留有缓冲；BRD 附录 9.1 敏感性已覆盖"AB→AB2 提高 → 订阅基线可下调"。</blockquote>
+<hr/>
+<h2>5. 逐层演算：三场景 × 六层漏斗（透明拆解）</h2>
+<h3>5.1 转化率假设（对标国际站，欧洲合规从严折半）</h3>
+<table>
+<tr><th>参数</th><th>保守</th><th>基准</th><th>乐观</th><th>依据（含国际站实测锚点）</th></tr>
+<tr><td>点位 1 询盘弹窗一级同意（L2）</td><td>10%</td><td>15%</td><td>20%</td><td>国际站沟通页弹窗实测<strong>最终订阅 8.6%</strong>（ab3 152k→授权 13k），对应本表 15%×65%=9.75% 高度吻合</td></tr>
+<tr><td>点位 2 验证后询问一级同意（L2）</td><td>6%</td><td>8%</td><td>10%</td><td>通用场景，介于注册联动 10% 与订后页 2% 之间</td></tr>
+<tr><td>点位 3 注册勾选一级同意（L2）</td><td>3%</td><td>5%</td><td>7%</td><td>国际站注册联动实测 10% 为默认勾选/直接授权；Visable 默认不勾选 + double opt-in → 折半从严</td></tr>
+<tr><td>二级确认完成率（L3，double opt-in）</td><td>60%</td><td>65%</td><td>70%</td><td>国际站绑定码确认流程无明确流失数据，从严假设；对标可触达率 40%（国际站）→ 60%（Visable）质量溢价</td></tr>
+<tr><td>跨点位去重系数</td><td>0.75</td><td>0.8</td><td>0.85</td><td>询盘者多为已验证/注册用户（精确重叠率待补）</td></tr>
+<tr><td>灰度期系数（9 月 DE 单点位）</td><td>曝光 150–200 req/日</td><td>200–350</td><td>350–390</td><td>以 wlw（德系）询盘占比 26–35% 代理 DE；国际站国家优先级中 DE 属"稍后做"（渗透考虑）</td></tr>
+<tr><td>爬坡（10 月全量首月）</td><td>稳态的 80%</td><td>同左</td><td>同左</td><td>模板审核/链路稳定期</td></tr>
+</table>
+<h3>5.2 逐点位演算（L2 × L3 → 日均有效订阅，稳态）</h3>
+<p>公式示例（点位 1 基准）：1,083 req × 15% × 65% = <strong>106/日</strong></p>
+<table>
+<tr><th>点位</th><th>曝光/日</th><th>保守</th><th>基准</th><th>乐观</th><th>占比（基准）</th></tr>
+<tr><td>1 询盘弹窗</td><td>1,083</td><td>65</td><td>106</td><td>152</td><td><strong>~58%</strong></td></tr>
+<tr><td>2 验证后询问</td><td>887</td><td>32</td><td>46</td><td>62</td><td>~25%</td></tr>
+<tr><td>3 注册页勾选</td><td>946</td><td>17</td><td>31</td><td>46</td><td>~17%</td></tr>
+<tr><td>小计</td><td>2,916</td><td>114</td><td>183</td><td>260</td><td>100%</td></tr>
+<tr><td><strong>去重后（×系数）</strong></td><td>—</td><td><strong>85</strong></td><td><strong>146</strong></td><td><strong>221</strong></td><td>—</td></tr>
+</table>
+<h3>5.3 212 天累计（三段式：灰度 → 爬坡 → 稳态）</h3>
+<table>
+<tr><th>阶段</th><th>天数</th><th>保守（/日）</th><th>基准（/日）</th><th>乐观（/日）</th></tr>
+<tr><td>9 月灰度（DE 单点位）</td><td>30</td><td>10</td><td>20</td><td>30</td></tr>
+<tr><td>10 月全量爬坡（80%）</td><td>31</td><td>68</td><td>117</td><td>177</td></tr>
+<tr><td>11 月–3 月稳态</td><td>151</td><td>85</td><td>146</td><td>221</td></tr>
+<tr><td><strong>累计</strong></td><td><strong>212</strong></td><td><strong>≈ 15,000–16,000</strong></td><td><strong>≈ 26,000–27,000</strong></td><td><strong>≈ 39,000–40,000</strong></td></tr>
+<tr><td><strong>vs 35,000</strong></td><td>—</td><td><strong>✗ 缺口 54–57%</strong></td><td><strong>⚠ 缺口 23–26%</strong></td><td><strong>✓ 超额 11–14%</strong></td></tr>
+</table>
+<blockquote>v1 报告测算黑箱（212 天直接 × 日均），本次按灰度/爬坡/稳态三段透明拆解：基准累计 26,000–27,000，比 v1（29–31k）更紧，<strong>缺口 8,000–9,000</strong>。</blockquote>
+<h3>5.3b 假设验证：国际站实测锚点 vs 本测算假设</h3>
+<table>
+<tr><th>场景</th><th>国际站实测（最终订阅率）</th><th>本测算最终订阅率（L2×L3）</th><th>判定</th></tr>
+<tr><td>询盘/沟通后</td><td>8.6%（沟通页弹窗）</td><td>基准 15%×65% = 9.75%</td><td>✓ 高度吻合</td></tr>
+<tr><td>注册场景</td><td>10%（手机号注册联动，单次授权无确认）</td><td>基准 5%×65% = 3.25%</td><td>✓ 从严合理（默认不勾选+双确认）</td></tr>
+<tr><td>订后/通用场景</td><td>2%（订单页 WAP 组件）</td><td>点位 2 基准 8%×65% = 5.2%</td><td>⚠ 偏高，验证后询问应低于订后页但高于首页；灰度期校准</td></tr>
+<tr><td>首页大曝光</td><td>0.2–0.4%（100w UV 级）</td><td>未设此点位</td><td>✓ 不做首页入口（P2）正确</td></tr>
+</table>
+<h3>5.4 敏感性：缺口补足路径</h3>
+<table>
+<tr><th>变量</th><th>变动</th><th>对 212 天累计的影响</th></tr>
+<tr><td>点位 1 一级同意率</td><td>15% → 20%（+5pp）</td><td><strong>+9,000~10,000</strong>（达标 ✓）</td></tr>
+<tr><td>去重系数</td><td>0.8 → 0.75</td><td>−2,500~3,000</td></tr>
+<tr><td>二级确认完成率</td><td>65% → 60%</td><td>−3,500</td></tr>
+<tr><td><strong>存量激活（活跃池 13.7w）</strong></td><td><strong>0.5–1%/月</strong></td><td><strong>+5,000~10,000</strong>（补基准缺口 ✓）</td></tr>
+<tr><td>灰度期实测转化率</td><td>一级同意 ≥15% 且二级 ≥60%</td><td>全量基准场景成立的前提</td></tr>
+</table>
+<hr/>
+<h2>6. 结论与建议</h2>
+<ol>
+<li><strong>35,000 可达，但"新触点 + 存量激活"缺一不可</strong>：三新触点基准贡献 26–27k（缺口 8–9k），存量激活按<strong>活跃池 13.7w</strong>（非 360w 全量）0.5–1%/月可补 5–10k → 合计 31–37k。<strong>Subscription Center 是达标关键路径，需 P1 期即启动</strong>。</li>
+</ol>
+<ol>
+<li><strong>点位 1（询盘弹窗）是量级支柱（基准占比 ~58%）</strong>：1,083 次曝光/日 + 高意图场景。灰度期 A/B 两版文案（利益点：询盘回复提醒 vs 产品推荐）锁定最优；一级同意率必须 ≥15%，否则直接掉入保守区间。</li>
+</ol>
+<ol>
+<li><strong>灰度期（9 月 DE）使命是验证转化率而非拉量</strong>：日均 10–30（以 wlw 询盘占比 26–35% 代理 DE 曝光）。若实测 ≥ 假设下沿（同意 ≥15%、二级 ≥60%），10 月全量放量成立；若显著低于，需提前加码 Subscription Center 存量激活或登录页入口（原 P2 提前）。</li>
+</ol>
+<ol>
+<li><strong>转化率假设获国际站实测验证（§5.3b）</strong>：点位 1 基准最终订阅率 9.75%（15%×65%）vs 国际站沟通页弹窗实测 8.6%——高度吻合；点位 3 从严折半 3.25% vs 注册联动 10%（默认勾选差异）符合欧洲合规预期。灰度期实测若达 8.6%+ 即可确认全量基准成立；国际站规律"意图越高转化越高"（沟通 8.6% ≈ 注册 10% >> 订后 2% >> 首页 0.2–0.4%）直接支持点位优先级设计（首页大曝光不做入口 P2 正确）。</li>
+</ol>
+<ol>
+<li><strong>结果侧 AB→AB2 实测 30.6% > 25% 假设</strong>：营销漏斗缓冲充足，达标线（AB2 ≥5/日）达成压力小，资源应优先投订阅池积累。</li>
+</ol>
+<ol>
+<li><strong>数据警示</strong>：① 7/22–24 QDR 异常需数据侧排查；② has_phone 字段 100% 覆盖无区分度，可触达口径只能用 is_verified + 活跃；③ ep 新注册 93.8% 验证率偏高（含自动/导入账号可能）需验证；④ BRD 假设 Web UV 4.5w，实测 4.0w（−11%），曝光基数偏紧；⑤ 国际站订阅总量已 <strong>900w+</strong>（2026-08-10 手册：日均触达 200w），旧文档 500w 为过时数据，对标引用时注意。</li>
+</ol>
+<ol>
+<li><strong>后续待补数据</strong>：① 点位人群重叠率（询盘 ∩ 注册）——用于去重系数校准；② DE 国 UV/询盘占比——用于灰度期排期；③ 存量已验证用户活跃度分层（360w 中近 90 天活跃比例）——用于 Subscription Center 激活测算；④ 点位 2 对标锚点（国际站验证后询问无直接对标，需用灰度期实测校准）。</li>
+</ol>
+<table>
+<tr><th>待补项</th><th>用途</th><th>现状</th></tr>
+<tr><td>country 维度（DE 询盘/UV 占比）</td><td>灰度期排期精确化</td><td>Redash 大表 country 查询全部超时；当前以 wlw（德系）询盘占比 26–35% 代理</td></tr>
+<tr><td>点位人群重叠率（询盘 ∩ 注册/验证）</td><td>去重系数校准（当前假设 0.75–0.85）</td><td>active_buyers 无 email 可 join fact_user_profile，待数据侧建 join 键</td></tr>
+<tr><td>存量活跃分层（近 90 天真实活跃）</td><td>存量激活率假设</td><td>当前用 first_login_at 代理（13.7w 为登录过的上界），需精确活跃口径</td></tr>
+<tr><td>ep 注册账号构成（人工/自动/导入）</td><td>注册触点真实曝光</td><td>93.8% 验证率偏高，待验证</td></tr>
+</table>
+<hr/>
+<h2>附录：取数明细（2026-08-19，Redash dataSourceId=1）</h2>
+<table>
+<tr><th>#</th><th>查询</th><th>口径</th><th>结果</th></tr>
+<tr><td>1</td><td>Web UV</td><td>ga_user_metrics，28 天 COUNTD(visitor_sk)/28</td><td>ep 20,224、wlw 19,360 → 39,584/日</td></tr>
+<tr><td>2</td><td>新注册</td><td>fact_user_profile created_at ∈ 窗口</td><td>ep 22,977（820/日）、wlw 3,514（125/日）</td></tr>
+<tr><td>3</td><td>手机号验证</td><td>verified_at ∈ 窗口</td><td>ep 21,567（770/日）、wlw 3,283（117/日）</td></tr>
+<tr><td>4</td><td>新增 has_phone 覆盖</td><td>fact_user_profile has_phone</td><td><strong>ep/wlw 均 100%</strong>（字段无区分度）</td></tr>
+<tr><td>5</td><td>询盘（AB 层）</td><td>active_buyers is_ab2=false，剔除 7/22–24</td><td>QDR 855 req/403 buyer、RFQ 228 req/189 buyer → 1,083/592</td></tr>
+<tr><td>6</td><td>AB2</td><td>active_buyers is_ab2=true</td><td>QDR 94、RFQ 87 buyers/日 → 181/日（AB→AB2 30.6%）</td></tr>
+<tr><td>7</td><td>询盘平台分布</td><td>active_buyers GROUP BY platform（25 天）</td><td>ep 839 req/397 buyer、wlw 299 req/212 buyer（wlw 占 buyers 35% → DE 代理）</td></tr>
+<tr><td>8</td><td>存量用户</td><td>fact_user_profile 全量（≥2024-01-01）</td><td>总 410w；已验证 359.8w；已验证+登录 13.7w</td></tr>
+<tr><td>9</td><td>国家维度（attempt）</td><td>active_buyers/fact_user_profile country</td><td><strong>全部超时</strong>（Redash 大表限制，待其他通道）</td></tr>
+</table>
+<blockquote>数据时效：T-3 口径（2026-08-16 为最新可用日）。</blockquote>
+</body>
+</html>
