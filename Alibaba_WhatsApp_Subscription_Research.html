@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>国际站 WhatsApp 订阅怎么做——语雀方案调研</title>
+<style>
+:root { --accent: #1a7f37; --border: #d0d7de; --bg: #f6f8fa; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+       max-width: 960px; margin: 0 auto; padding: 24px 32px 80px;
+       color: #1f2328; line-height: 1.7; background: #fff; }
+h1 { font-size: 26px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+h2 { font-size: 20px; margin-top: 36px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { font-size: 17px; margin-top: 26px; color: #0a3069; }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 13.5px;
+        background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 600; white-space: nowrap; }
+tr:nth-child(even) td { background: #fafbfc; }
+img { max-width: 100%; max-height: 460px; object-fit: contain; border: 1px solid #e1e4e8;
+      border-radius: 6px; background: #fff; display: block; margin: 0 auto; }
+td img { max-height: 420px; }
+blockquote { border-left: 4px solid #d4a72c; background: #fff8e6; margin: 12px 0;
+             padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13.5px; color: #5b4a00; }
+code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+li { margin: 4px 0; }
+a { color: #0969da; text-decoration: none; }
+
+body{max-width:1280px;display:flex;gap:0;padding:0;margin:0 auto}
+.toc{position:sticky;top:0;align-self:flex-start;width:280px;min-width:280px;height:100vh;overflow-y:auto;border-right:1px solid var(--border);padding:28px 20px 40px;background:#fbfdfc;box-sizing:border-box}
+.toc-title{font-weight:700;color:var(--accent);font-size:1.05em;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--accent)}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc ul ul{margin-left:14px}
+.toc li{margin:3px 0}
+.toc a{color:#374151;font-size:0.86em;display:block;padding:3px 8px;border-radius:6px;border-left:2px solid transparent}
+.toc a:hover{color:var(--accent);background:#e8f5ee;text-decoration:none}
+.toc a.active{color:var(--accent);font-weight:600;background:#e8f5ee;border-left-color:var(--accent)}
+.toc-h3 a{color:#64748b}
+.content{flex:1;min-width:0;max-width:960px;margin:0 auto;padding:40px 48px}
+h2[id],h3[id]{scroll-margin-top:20px}
+@media (max-width:900px){body{display:block}.toc{position:relative;width:100%;min-width:0;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.content{padding:24px 20px}}
+
+</style>
+</head>
+<body>
+<nav class="toc"><div class="toc-title">📑 目录</div><ul><li class="toc-h2"><a href="#sec-1">一、整体盘子：订阅漏斗与规模</a><ul><li class="toc-h3"><a href="#sec-2">1.1 当前规模（2026-08-10 手册最新口径）</a></li><li class="toc-h3"><a href="#sec-3">1.2 订阅漏斗全链路（2024.12-2025.01 口径 + FY26 目标）</a></li><li class="toc-h3"><a href="#sec-4">1.3 渠道效率对比（为什么选 WhatsApp）</a></li></ul></li><li class="toc-h2"><a href="#sec-5">二、订阅入口：8 大点位全站铺设（核心打法）</a><ul><li class="toc-h3"><a href="#sec-6">2.1 关键入口实拍（对标素材）</a></li></ul></li><li class="toc-h2"><a href="#sec-7">三、转化率实测规律："意图越高转化越高"</a></li><li class="toc-h2"><a href="#sec-8">四、订阅确认机制：double opt-in 实操范式</a><ul><li class="toc-h3"><a href="#sec-9">4.1 绑定码流程（= double opt-in 实操范本）</a></li><li class="toc-h3"><a href="#sec-10">4.2 手机号订阅模式（仅有手机号未关联账号的用户）</a></li><li class="toc-h3"><a href="#sec-11">4.3 订阅/退订基建</a></li></ul></li><li class="toc-h2"><a href="#sec-12">五、触达与运营：场景策略 + 频控 + AI 承接</a><ul><li class="toc-h3"><a href="#sec-13">5.1 七大声景（长期触达策略 BRD）</a></li><li class="toc-h3"><a href="#sec-14">5.2 关键场景节奏（生命周期运营表）</a></li><li class="toc-h3"><a href="#sec-15">5.3 系统消息 vs 营销消息（性价比结论）</a></li><li class="toc-h3"><a href="#sec-16">5.4 护栏</a></li></ul></li><li class="toc-h2"><a href="#sec-17">六、演进时间线（策略成熟度参考）</a></li><li class="toc-h2"><a href="#sec-18">七、对 Visable 的启示（对标结论）</a></li><li class="toc-h2"><a href="#sec-19">参考来源</a></li></ul></nav>
+<div class="content"><h1>国际站（Alibaba.com）WhatsApp 订阅是怎么做的——语雀方案调研</h1>
+<blockquote>调研整理：2026-08-25 ｜ 来源：阿里内网语雀（yuque.alibaba-inc.com/amb5ap）7 篇全文提取（2026-08-15）+ 订阅专项实读 6 篇（2026-08-19：入口整理/手机号订阅 PRD/竞品调研/WhatsApp 手册/订单页 BRD/订阅增长策略 BRD）｜ 用途：Visable 买家侧 WhatsApp 发送策略与订阅点位设计对标</blockquote>
+<hr/>
+<h2 id="sec-1">一、整体盘子：订阅漏斗与规模</h2>
+<h3 id="sec-2">1.1 当前规模（2026-08-10 手册最新口径）</h3>
+<table>
+<tr><th>指标</th><th>数值</th><th>说明</th></tr>
+<tr><td>累计订阅用户</td><td><strong>900w+</strong></td><td>2022 年起 1.5 年+ 积累（旧文档 500w 已过时）</td></tr>
+<tr><td>日均触达</td><td>200w</td><td>有合法授权用户</td></tr>
+<tr><td>归因 UV</td><td>10w/日</td><td>点击率 ~13%</td></tr>
+<tr><td>ABPRO / 订单</td><td>1,900 / 700（日均）</td><td>进站率 5%</td></tr>
+<tr><td>订阅前后行为</td><td>访问 +141% / 订单 +16%</td><td>ROI > 1</td></tr>
+</table>
+<h3 id="sec-3">1.2 订阅漏斗全链路（2024.12-2025.01 口径 + FY26 目标）</h3>
+<table>
+<tr><th>漏斗层级</th><th>当前</th><th>FY26 目标</th><th>倍数</th></tr>
+<tr><td>总订阅</td><td>500w</td><td>1500w</td><td>3x</td></tr>
+<tr><td>可触达</td><td>200w</td><td>600w</td><td>3x</td></tr>
+<tr><td>日均新增订阅</td><td>5k</td><td>2w</td><td>4x</td></tr>
+<tr><td>周均触达</td><td>~</td><td>170w（周均 2 次）</td><td>-</td></tr>
+<tr><td>日均触达 UV</td><td>1w</td><td>15w</td><td>15x</td></tr>
+<tr><td>日均 PB</td><td>130</td><td>1500</td><td>11.5x</td></tr>
+</table>
+<blockquote>历史存量分层（336w）：未 ab3 未支付 169w / ab3 未支付 140w / 已支付 20w；区域以拉美（BR+CO+MX+PE+CL 13%）、中东（11%）、美国（9%）为主；国家 TOP：US 29.5w / IN 17.8w / PK 14.4w / BR 13.1w。</blockquote>
+<h3 id="sec-4">1.3 渠道效率对比（为什么选 WhatsApp）</h3>
+<table>
+<tr><th>渠道</th><th>点击率</th><th>PB 转化</th><th>ABPRO 转化</th></tr>
+<tr><td><strong>WhatsApp</strong></td><td><strong>10%</strong></td><td>1.5%</td><td>5.5%</td></tr>
+<tr><td>SMS</td><td>2.7%</td><td>1.7%</td><td>-</td></tr>
+<tr><td>Messenger</td><td>11%</td><td>-</td><td>装机 3%</td></tr>
+</table>
+<hr/>
+<h2 id="sec-5">二、订阅入口：8 大点位全站铺设（核心打法）</h2>
+<p><strong>打法本质：全站多点位、分层铺入口，锚定高意图场景。</strong> 8 个入口状态与预期：</p>
+<table>
+<tr><th>#</th><th>入口</th><th>状态</th><th>覆盖</th><th>预期收益/卡点</th></tr>
+<tr><td>1</td><td><strong>沟通页弹窗</strong>（退出沟通页弹出）</td><td>已上线</td><td>全球</td><td>无卡点；<strong>最高转化点位</strong></td></tr>
+<tr><td>2</td><td><strong>沟通回退列表页横条</strong></td><td>提需中</td><td>全球</td><td>20w UV/天 × 10-15% = <strong>1-2w 订阅/天</strong></td></tr>
+<tr><td>3</td><td><strong>MA 个人中心</strong>（登录态常驻）</td><td>墨已上线+17 国排期</td><td>墨+17 国</td><td>全量开放 +5k-1w/天；仅对 WA 渗透 90%+ 国家开放</td></tr>
+<tr><td>4</td><td><strong>下单页</strong>（订单详情/支付成功页）</td><td>提需中</td><td>17 国</td><td>待交易域排期</td></tr>
+<tr><td>5</td><td><strong>商详 TA 楼层</strong></td><td>提需中</td><td>17 国</td><td>待排期</td></tr>
+<tr><td>6</td><td><strong>首页左滑退出</strong>（安卓）</td><td>提需中</td><td>17 国</td><td>待排期</td></tr>
+<tr><td>7</td><td><strong>首页 PC</strong>（Footer/Header）</td><td>提需中</td><td>17 国</td><td>大曝光低转化</td></tr>
+<tr><td>8</td><td><strong>搜索重复 query 提示</strong></td><td>提需中</td><td>全球</td><td><strong>订阅 +6k/天</strong>；11 月底排期</td></tr>
+</table>
+<p><strong>关键做法</strong>：</p>
+<ul>
+<li>订阅入口从<strong>2022 年就开始铺</strong>，逐年扩容（沟通弹窗 → 注册联动 → MA → 搜索），"入口铺设是长期工程，不做完不罢休"；</li>
+<li>防打扰：已订阅用户不重复展示；退订用户可再次展示；WA 需要主动展示（不做默认订阅）。</li>
+</ul>
+<h3 id="sec-6">2.1 关键入口实拍（对标素材）</h3>
+<table>
+<tr><th>入口</th><th>实拍</th><th>转化锚点</th></tr>
+<tr><td>沟通页弹窗</td><td><img src="assets/prd/int_01_chat_connect_popup.png" alt="沟通页弹窗：Connect to WhatsApp"/></td><td><strong>8.6%</strong>（全站最高）</td></tr>
+<tr><td>沟通列表页横条</td><td><img src="assets/prd/int_02_messenger_list_banner.png" alt="Messenger 列表页底部订阅横幅"/></td><td>10-15%（预估）</td></tr>
+<tr><td>个人中心 MA</td><td><img src="assets/prd/int_03_myalibaba_banner.png" alt="个人中心：Get dedicated support on WhatsApp!"/></td><td>1%</td></tr>
+<tr><td>订单详情页</td><td><img src="assets/prd/int_04_order_detail_banner.png" alt="订单详情页：WhatsApp 支持横幅"/></td><td>2%</td></tr>
+<tr><td>首页 PC 横幅</td><td><img src="assets/prd/int_08_home_pc_banner.png" alt="首页 PC：二维码"/></td><td>0.2%</td></tr>
+<tr><td>WAP 订阅条</td><td><img src="assets/prd/str_02_wap_subscribe_bar.png" alt="WAP：Subscribe to WhatsApp to be notified first on limited deals"/></td><td>文案范本</td></tr>
+<tr><td>搜索重复 query 三步流</td><td><img src="assets/prd/int_10_search_subscribe_flow.png" alt="搜索订阅三步流"/></td><td>+6k/天</td></tr>
+</table>
+<hr/>
+<h2 id="sec-7">三、转化率实测规律："意图越高转化越高"</h2>
+<table>
+<tr><th>点位/场景</th><th>曝光</th><th>订阅转化</th><th>转化率</th></tr>
+<tr><td>沟通页弹窗（1v1 沟通后）</td><td>日均 ab3 152k</td><td>授权 13k</td><td><strong>8.6%</strong></td></tr>
+<tr><td>登录注册（手机号注册联动/补号）</td><td>日均注册 4w</td><td>4k</td><td><strong>10%</strong></td></tr>
+<tr><td>订单详情页 WAP 组件</td><td>10w UV</td><td>2k</td><td><strong>2%</strong></td></tr>
+<tr><td>个人中心 MA 模块</td><td>40w UV</td><td>4k</td><td><strong>1%</strong></td></tr>
+<tr><td>首页 PC 承接弹窗</td><td>100w UV</td><td>4k</td><td><strong>0.4%</strong></td></tr>
+<tr><td>首页 WAP 浮窗</td><td>100w UV</td><td>2k</td><td><strong>0.2%</strong></td></tr>
+</table>
+<blockquote><strong>核心规律：沟通页 8.6% ≈ 注册联动 10% >> 订后页 2% >> 首页大曝光 0.2-0.4%。</strong> 首页 100w UV 大曝光仅 0.2-0.4% 转化 → 低意图大曝光场景效率极低。这是 Visable 不做首页入口、锚定询盘场景的直接依据。</blockquote>
+<hr/>
+<h2 id="sec-8">四、订阅确认机制：double opt-in 实操范式</h2>
+<h3 id="sec-9">4.1 绑定码流程（= double opt-in 实操范本）</h3>
+<p>```</p>
+<p>站内点击订阅 → wa.me 唤醒 WhatsApp（自动带入话术+绑定码 BIND-xxxx）</p>
+<p>→ 用户发送绑定码 → 系统回欢迎话术 → 订阅成功</p>
+<p>```</p>
+<ul>
+<li>站外话术（wa.me 默认带入）："I would like to subscribe alibaba.com channel."</li>
+<li>利益点文案："Subscribe to WhatsApp to be notified first on limited deals"</li>
+<li>欢迎话术含 STOP 退订指令；模板示例："Hi {name}, Thanks for subscribe our WhatsApp channel!"</li>
+</ul>
+<h3 id="sec-10">4.2 手机号订阅模式（仅有手机号未关联账号的用户）</h3>
+<ul>
+<li>存量：历史累计 ~80w，日均进线 3-5k，此前无追加触达能力；</li>
+<li>目标：Q4 日均转化 aliid 订阅 1w、进站 UV 1w、发送规模 20w；</li>
+<li><strong>判定流程（合规关键）</strong>：</li>
+</ul>
+<p>```</p>
+<p>非关联 aliid → 近 14 天无对话 → 非欧洲手机号（欧洲过滤！） → AI 判非广告/STOP/辱骂</p>
+<p>→ 标记订阅 → 发 U2Q 模板消息引导进站</p>
+<p>```</p>
+<ul>
+<li>进站关联 aliid 后转为普通订阅用户。</li>
+</ul>
+<h3 id="sec-11">4.3 订阅/退订基建</h3>
+<ul>
+<li><strong>订阅三态</strong>：订阅 / 退订 / 未知，统一查询是任何触达的前提；</li>
+<li><strong>退订通道</strong>：站内订阅管理页 + 站外 STOP / Unsubscribe（模板内嵌）；</li>
+<li><strong>单次授权 = 永久订阅</strong>（无需重复授权）；</li>
+<li>订阅态服务是发送前必查项（合规红线）。</li>
+</ul>
+<hr/>
+<h2 id="sec-12">五、触达与运营：场景策略 + 频控 + AI 承接</h2>
+<h3 id="sec-13">5.1 七大声景（长期触达策略 BRD）</h3>
+<table>
+<tr><th>#</th><th>场景</th><th>触发</th><th>状态</th></tr>
+<tr><td>1</td><td>订单通知（完成/确认）</td><td>订单事件</td><td>已上线</td></tr>
+<tr><td>2</td><td>物流提醒（发货/轨迹）</td><td>物流事件</td><td>已上线</td></tr>
+<tr><td>3</td><td>沟通未读提醒</td><td>事件</td><td>已上线</td></tr>
+<tr><td>4</td><td>近 7 天未访问欢迎召回</td><td>编排圈人+全域投放</td><td>已上线</td></tr>
+<tr><td>5</td><td>沟通语义识别（中断节点推送）</td><td>语义分析</td><td>已上线</td></tr>
+<tr><td>6</td><td>日常营销（大促/AI 承接）</td><td>活动</td><td>已上线</td></tr>
+<tr><td>7</td><td>订阅问候 + AI 承接</td><td>订阅事件</td><td>开发中</td></tr>
+</table>
+<h3 id="sec-14">5.2 关键场景节奏（生命周期运营表）</h3>
+<ul>
+<li><strong>首次订阅问候</strong>：点击率预计 50%、日均 6000 UV、AB3 440、PB 30；</li>
+<li><strong>购物车流失</strong>：加购 1h 无行为 → 1h 活动营销 → 22h 权益 → 23h 满意度；未点击 1 月/次、点击后每周 1 次；</li>
+<li><strong>支付优化（催付）</strong>：payment 1 分钟未完成 → 1 分钟/1 小时/23 小时系统消息；</li>
+<li><strong>流失召回</strong>：180 天未访问 + 历史 PB，当地 10 点发送；</li>
+<li>频次：<strong>周均 2 次</strong>；营销与系统消息<strong>分层错峰</strong>（同发浪费资源）。</li>
+</ul>
+<h3 id="sec-15">5.3 系统消息 vs 营销消息（性价比结论）</h3>
+<table>
+<tr><th>指标</th><th>系统消息</th><th>营销消息</th></tr>
+<tr><td>已读率</td><td><strong>62.8%</strong></td><td>40-50%</td></tr>
+<tr><td>点击率</td><td>高（23%）</td><td>10%+（AI 内容）</td></tr>
+<tr><td>单次成本</td><td>低（≈营销 1/6）</td><td>≈系统消息 <strong>6 倍</strong></td></tr>
+<tr><td>作用</td><td>高点击低成本</td><td>高 PB 转化、长期累积</td></tr>
+</table>
+<h3 id="sec-16">5.4 护栏</h3>
+<ul>
+<li>全局熔断：计费 session > 1.5w/日强制停止；</li>
+<li>24h 对话计费一次（平均 $0.05/session）；</li>
+<li>频控避免打扰导致号码质量降级。</li>
+</ul>
+<hr/>
+<h2 id="sec-17">六、演进时间线（策略成熟度参考）</h2>
+<table>
+<tr><th>时间</th><th>里程碑</th><th>效果</th></tr>
+<tr><td>2022</td><td>绑定弹窗上线</td><td>-</td></tr>
+<tr><td>2023.07</td><td>营销授权</td><td>绑定 329w</td></tr>
+<tr><td>2024.03</td><td>下线（技术资源+预算有限）</td><td>-</td></tr>
+<tr><td>2024.06</td><td>重启预估</td><td>CPPB $148</td></tr>
+<tr><td>2024.09</td><td>FY25 重启 + AI 智能客服</td><td>点击率 7%→10%</td></tr>
+<tr><td>2024.10-11</td><td>订阅问候/物流/订单/沟通语义上线</td><td>+3000 UV/日</td></tr>
+<tr><td>2024.11.18</td><td>沟通订阅节点</td><td>日均新增 7k</td></tr>
+<tr><td>2024.11.20</td><td>AI 承接上线</td><td>日均 3k 用户、进站率 9%</td></tr>
+<tr><td>2024.12.15</td><td>7 天流失召回</td><td>+10000 UV/日</td></tr>
+<tr><td>2024.12.19</td><td>AI 承接</td><td>进站率 20%</td></tr>
+<tr><td>2024.12.21</td><td>周数据</td><td>UV 10,456、PB 137、CPPB $11.4、ROI 1.16</td></tr>
+<tr><td>2025.01</td><td>年度总结</td><td>ROI 1.2、系统消息 +400 买驱订单/日</td></tr>
+<tr><td>2026.03</td><td>AI 触达日报</td><td>日均触达 UV 32.8w、PB 750、月成本 $62.8w、ROI 36%</td></tr>
+</table>
+<blockquote>关键转折：<strong>AI 承接让 ROI 从 0.1 → 1.2</strong>（满意度 90%、进站率 20%）——"模板消息 + AI 对话承接"最大化单 session 价值。</blockquote>
+<hr/>
+<h2 id="sec-18">七、对 Visable 的启示（对标结论）</h2>
+<ol>
+<li><strong>漏斗是慢变量，入口铺设从一期开始</strong>：国际站 1.5 年+ 才累积 900w 订阅 → Visable 的 67,000 订阅目标必须多点位并行、一期就铺；</li>
+<li><strong>只做高意图点位</strong>："意图越高转化越高"（8.6% vs 0.2%）→ Visable 不做首页大曝光，P0 锚定询盘弹窗（唯一有国际站同场景实测背书的点位：8.6% ≈ 测算基准 9.75%）；</li>
+<li><strong>系统消息是性价比之王</strong>：已读率 62.8%、成本仅营销 1/6 → 一期先做系统/交易类，与 Visable"拉快首响"定位一致；</li>
+<li><strong>double opt-in 要更严</strong>：国际站都过滤欧洲手机号（合规从严），Visable 主战场即欧洲 → 手机号验证点位（点位 2）是核心合规触点；注册联动国际站 10% 为默认勾选，Visable 从严折半（5%）；</li>
+<li><strong>订阅三态基建先行</strong>：订阅/退订/未知统一查询是任何触达的前提，与 Visable 订阅态三态服务设计一致；</li>
+<li><strong>AI 承接是第二曲线</strong>：国际站 ROI 翻盘靠 AI（进站率 20%）→ Visable 二期可借鉴"模板 + AI 对话承接"；</li>
+<li><strong>频控熔断是红线</strong>：1.5w session 全局熔断、营销系统错峰 → Visable 护栏（送达率 ≥90%、退订 <5%、投诉 <2%）同源。</li>
+</ol>
+<hr/>
+<h2 id="sec-19">参考来源</h2>
+<ul>
+<li>语雀：https://yuque.alibaba-inc.com/amb5ap（7 篇：渠道触达策略/现状梳理/长期触达策略 BRD/重启月报/年度总结/FY25 策略/AI 触达日报）</li>
+<li>2026-08-19 实读 6 篇：《WhatsApp订阅入口整理》《【PRD】WhatsApp手机号订阅需求》《WhatsApp 竞品调研》《Alibaba.com WhatsApp手册》《订单页 BRD》《订阅增长策略 BRD》</li>
+<li>本地汇总：[Alibaba_WhatsApp_数据与策略支撑汇总.md](Alibaba_WhatsApp_数据与策略支撑汇总.md)（全文提取）</li>
+</ul></div>
+<script>
+// scrollspy: 高亮当前章节
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var ids = Object.keys(map);
+  function onScroll(){
+    var cur = ids[0];
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (el && el.getBoundingClientRect().top <= 96) cur = ids[i];
+    }
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (map[cur]) map[cur].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>

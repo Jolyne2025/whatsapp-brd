@@ -12,5 +12,10 @@
 
 ## 调研：WhatsApp 消息模板创建（2026-08-25）
 
-- 在线浏览：[WhatsApp_Message_Templates_Research.html](WhatsApp_Message_Templates_Research.html)
+- 在线浏览：[WhatsApp_Message_Templates_Research.html](WhatsApp_Message_Templates_Research.html)（带左侧目录）
 - 源文档：本地 WhatsApp_消息模板创建调研.md
+
+## 调研：国际站（Alibaba.com）WhatsApp 订阅怎么做（2026-08-25）
+
+- 在线浏览：[Alibaba_WhatsApp_Subscription_Research.html](Alibaba_WhatsApp_Subscription_Research.html)（带左侧目录）
+- 源文档：本地 Alibaba_国际站WhatsApp订阅怎么做_调研.md

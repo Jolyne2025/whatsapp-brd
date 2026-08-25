@@ -26,13 +26,29 @@ code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12.
 hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 li { margin: 4px 0; }
 a { color: #0969da; text-decoration: none; }
+
+body{max-width:1280px;display:flex;gap:0;padding:0;margin:0 auto}
+.toc{position:sticky;top:0;align-self:flex-start;width:280px;min-width:280px;height:100vh;overflow-y:auto;border-right:1px solid var(--border);padding:28px 20px 40px;background:#fbfdfc;box-sizing:border-box}
+.toc-title{font-weight:700;color:var(--accent);font-size:1.05em;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--accent)}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc ul ul{margin-left:14px}
+.toc li{margin:3px 0}
+.toc a{color:#374151;font-size:0.86em;display:block;padding:3px 8px;border-radius:6px;border-left:2px solid transparent}
+.toc a:hover{color:var(--accent);background:#e8f5ee;text-decoration:none}
+.toc a.active{color:var(--accent);font-weight:600;background:#e8f5ee;border-left-color:var(--accent)}
+.toc-h3 a{color:#64748b}
+.content{flex:1;min-width:0;max-width:960px;margin:0 auto;padding:40px 48px}
+h2[id],h3[id]{scroll-margin-top:20px}
+@media (max-width:900px){body{display:block}.toc{position:relative;width:100%;min-width:0;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.content{padding:24px 20px}}
+
 </style>
 </head>
 <body>
-<h1>WhatsApp 消息模板（Message Templates）创建调研</h1>
+<nav class="toc"><div class="toc-title">📑 目录</div><ul><li class="toc-h2"><a href="#sec-1">一、为什么需要消息模板</a></li><li class="toc-h2"><a href="#sec-2">二、模板三大类别</a></li><li class="toc-h2"><a href="#sec-3">三、创建方式 A：WhatsApp Manager 界面操作（无代码）</a></li><li class="toc-h2"><a href="#sec-4">四、创建方式 B：Cloud API 编程创建（项目直连走这条）</a></li><li class="toc-h2"><a href="#sec-5">五、审核机制与通过技巧</a></li><li class="toc-h2"><a href="#sec-6">六、运营规则与常见坑</a></li><li class="toc-h2"><a href="#sec-7">七、对 Visable 项目的启示</a></li><li class="toc-h2"><a href="#sec-8">参考来源</a></li></ul></nav>
+<div class="content"><h1>WhatsApp 消息模板（Message Templates）创建调研</h1>
 <blockquote>调研日期：2026-08-25 ｜ 面向 Visable 直连 Meta Cloud API 通道（自建模板管理/送审）｜ 来源：Meta 官方文档 + GuruSup 2026 指南 + ChatDaddy 出海指南</blockquote>
 <hr/>
-<h2>一、为什么需要消息模板</h2>
+<h2 id="sec-1">一、为什么需要消息模板</h2>
 <p>WhatsApp 的核心规则是 <strong>24 小时客户服务窗口</strong>：</p>
 <ul>
 <li>用户主动给商家号发消息后，开启 24h 窗口，窗口内商家可<strong>自由发送任意内容、免费</strong>；</li>
@@ -40,7 +56,7 @@ a { color: #0969da; text-decoration: none; }
 </ul>
 <p>因此模板 = 商家主动触达用户的唯一合法载体，也是 Visable「拉快首响」通道的基础设施。项目记忆确认：直连 Cloud API 免费按量计费，但需<strong>自建模板管理/送审</strong>。</p>
 <hr/>
-<h2>二、模板三大类别</h2>
+<h2 id="sec-2">二、模板三大类别</h2>
 <table>
 <tr><th>类别</th><th>典型场景</th><th>审核难度</th><th>相对费用（对话计费）</th><th>备注</th></tr>
 <tr><td><strong>Utility 实用类</strong></td><td>订单确认、物流更新、预约提醒、账户通知、账单、订阅确认</td><td>较宽松（对用户有益）</td><td>最低-中等，约 $0.01-0.04/对话；欧洲约 €0.03-0.04/条</td><td>内容必须与"实用目的"一致，<strong>掺入促销会被 Meta 重判为 Marketing</strong></td></tr>
@@ -50,7 +66,7 @@ a { color: #0969da; text-decoration: none; }
 <p><strong>分类是审核被拒的头号原因</strong>：消息同时含实用信息+营销内容 → 按 Marketing 提交，不要"包装"成 Utility 降费（易被拒，且过了也可能被举报影响账号质量分）。</p>
 <blockquote>与 Visable BRD 对照：Utility €0.035/条、Marketing €0.11/条的口径与 Meta 欧洲费率一致。订阅确认 onboarding 模板"争取 Utility（含订阅确认措辞）"即属此分类风险点。</blockquote>
 <hr/>
-<h2>三、创建方式 A：WhatsApp Manager 界面操作（无代码）</h2>
+<h2 id="sec-3">三、创建方式 A：WhatsApp Manager 界面操作（无代码）</h2>
 <p>路径：<strong>Meta Business Suite → WhatsApp 管理工具（WhatsApp Manager）→ 消息模板 → 创建模板</strong>，填写：</p>
 <ol>
 <li><strong>模板名称</strong>：仅小写字母+数字+下划线，如 <code>rfq_promo_recurring_v1</code>；</li>
@@ -64,7 +80,7 @@ a { color: #0969da; text-decoration: none; }
 </ol>
 <blockquote>另有<strong>预批准模板库</strong>：WhatsApp Manager 模板库中直接选用 Meta 预批准模板（如订单确认、物流等），<strong>即时批准</strong>，适合快速起步。</blockquote>
 <hr/>
-<h2>四、创建方式 B：Cloud API 编程创建（项目直连走这条）</h2>
+<h2 id="sec-4">四、创建方式 B：Cloud API 编程创建（项目直连走这条）</h2>
 <p>POST 到 WABA 级接口创建：</p>
 <p>```bash</p>
 <p>curl -X POST 'https://graph.facebook.com/v21.0/{waba-id}/message_templates' \</p>
@@ -98,7 +114,7 @@ a { color: #0969da; text-decoration: none; }
 <p>管理接口（同域）：<code>GET /{waba-id}/message_templates</code> 列表、<code>DELETE</code> 删除；审核状态查询含 PENDING / APPROVED / REJECTED / PAUSED / DISABLED。</p>
 <p><strong>发送</strong>：模板批准后用 <code>POST /{phone-number-id}/messages</code>，<code>type: "template"</code> + 模板名 + 语言 + 变量值。</p>
 <hr/>
-<h2>五、审核机制与通过技巧</h2>
+<h2 id="sec-5">五、审核机制与通过技巧</h2>
 <p><strong>被拒常见原因</strong>：垃圾信息风格（全大写、过多感叹号、夸大词汇"史上最低/最后机会/千万别错过"、制造恐慌）、营销伪装 Utility、含敏感信息索取、变量使用不规范、内容与声称用途不符。</p>
 <p><strong>提高通过率技巧</strong>（实测可将通过率提至 90%+）：</p>
 <ul>
@@ -110,7 +126,7 @@ a { color: #0969da; text-decoration: none; }
 <li>营销模板 Footer/按钮加退订选项（Meta 鼓励，证明尊重选择权）。</li>
 </ul>
 <hr/>
-<h2>六、运营规则与常见坑</h2>
+<h2 id="sec-6">六、运营规则与常见坑</h2>
 <table>
 <tr><th>规则</th><th>说明</th></tr>
 <tr><td><strong>已批准模板不可修改</strong></td><td>要改文案只能新建模板重新送审 → 提交前仔细检查；高频模板可保留多版本做 A/B</td></tr>
@@ -122,7 +138,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><strong>限流</strong></td><td>发送速率按账号等级（初始 250 会话/天，最高 100,000），标准档 80 msg/s</td></tr>
 </table>
 <hr/>
-<h2>七、对 Visable 项目的启示</h2>
+<h2 id="sec-7">七、对 Visable 项目的启示</h2>
 <ol>
 <li><strong>直连 Cloud API 需自建模板管理</strong>：建议按 BRD 模板清单（onboarding 订阅确认 / RFQ 营销 recurring / 产品推荐 / 系统消息 2 类 / 催复）规划命名规范（<code>rfq_promo_recurring_de</code> 等），走 API 批量创建 + 状态监控脚本；</li>
 <li><strong>分类策略</strong>：Utility 首批 EN+DE 措辞中性；订阅确认模板"争取 Utility"有被重判 Marketing 的风险（€0.035 → €0.11），建议提交时措辞严格交易化（确认订阅状态+偏好设置+退订，无任何促销成分）；</li>
@@ -131,11 +147,31 @@ a { color: #0969da; text-decoration: none; }
 <li><strong>费用复核</strong>：模板类别决定计费（Utility €0.035 vs Marketing €0.11），BRD 费用表需按最终获批类别回填校准。</li>
 </ol>
 <hr/>
-<h2>参考来源</h2>
+<h2 id="sec-8">参考来源</h2>
 <ul>
 <li>Meta 官方：Template fundamentals（developers.facebook.com/documentation/business-messaging/whatsapp/templates/overview）、WhatsApp Manager 帮助中心</li>
 <li>GuruSup：WhatsApp API Message Templates Complete Guide（2026-06）</li>
 <li>ChatDaddy：WhatsApp 消息模板完全指南：出海企业模板申请与最佳实践（2026-03）</li>
-</ul>
+</ul></div>
+<script>
+// scrollspy: 高亮当前章节
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var ids = Object.keys(map);
+  function onScroll(){
+    var cur = ids[0];
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (el && el.getBoundingClientRect().top <= 96) cur = ids[i];
+    }
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (map[cur]) map[cur].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
 </body>
 </html>
