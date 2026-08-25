@@ -12,5 +12,5 @@
 
 ## 调研：WhatsApp 消息模板创建（2026-08-25）
 
-- 在线浏览：[WhatsApp_消息模板创建调研.html](WhatsApp_消息模板创建调研.html)
+- 在线浏览：[WhatsApp_Message_Templates_Research.html](WhatsApp_Message_Templates_Research.html)
 - 源文档：本地 WhatsApp_消息模板创建调研.md
