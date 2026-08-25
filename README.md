@@ -9,3 +9,8 @@
 
 - 在线浏览：[PRD_WhatsApp_Subscription.html](PRD_WhatsApp_Subscription.html)（含 33 张国际站/竞品演示图）
 - 源文档：本地 PRD_WhatsApp订阅点位设计.md（演示图 assets/prd/）
+
+## 调研：WhatsApp 消息模板创建（2026-08-25）
+
+- 在线浏览：[WhatsApp_消息模板创建调研.html](WhatsApp_消息模板创建调研.html)
+- 源文档：本地 WhatsApp_消息模板创建调研.md

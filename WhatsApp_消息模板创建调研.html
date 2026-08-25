@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WhatsApp 消息模板创建调研</title>
+<style>
+:root { --accent: #1a7f37; --border: #d0d7de; --bg: #f6f8fa; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+       max-width: 960px; margin: 0 auto; padding: 24px 32px 80px;
+       color: #1f2328; line-height: 1.7; background: #fff; }
+h1 { font-size: 26px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+h2 { font-size: 20px; margin-top: 36px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { font-size: 17px; margin-top: 26px; color: #0a3069; }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 13.5px;
+        background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 600; white-space: nowrap; }
+tr:nth-child(even) td { background: #fafbfc; }
+img { max-width: 100%; max-height: 460px; object-fit: contain; border: 1px solid #e1e4e8;
+      border-radius: 6px; background: #fff; display: block; margin: 0 auto; }
+td img { max-height: 420px; }
+blockquote { border-left: 4px solid #d4a72c; background: #fff8e6; margin: 12px 0;
+             padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13.5px; color: #5b4a00; }
+code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+li { margin: 4px 0; }
+a { color: #0969da; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>WhatsApp 消息模板（Message Templates）创建调研</h1>
+<blockquote>调研日期：2026-08-25 ｜ 面向 Visable 直连 Meta Cloud API 通道（自建模板管理/送审）｜ 来源：Meta 官方文档 + GuruSup 2026 指南 + ChatDaddy 出海指南</blockquote>
+<hr/>
+<h2>一、为什么需要消息模板</h2>
+<p>WhatsApp 的核心规则是 <strong>24 小时客户服务窗口</strong>：</p>
+<ul>
+<li>用户主动给商家号发消息后，开启 24h 窗口，窗口内商家可<strong>自由发送任意内容、免费</strong>；</li>
+<li><strong>窗口外</strong>（含用户从未发过消息、或超过 24h）商家要主动联系用户（通知、营销、群发），<strong>必须使用经 Meta 审核批准的消息模板</strong>，按模板类别付费。</li>
+</ul>
+<p>因此模板 = 商家主动触达用户的唯一合法载体，也是 Visable「拉快首响」通道的基础设施。项目记忆确认：直连 Cloud API 免费按量计费，但需<strong>自建模板管理/送审</strong>。</p>
+<hr/>
+<h2>二、模板三大类别</h2>
+<table>
+<tr><th>类别</th><th>典型场景</th><th>审核难度</th><th>相对费用（对话计费）</th><th>备注</th></tr>
+<tr><td><strong>Utility 实用类</strong></td><td>订单确认、物流更新、预约提醒、账户通知、账单、订阅确认</td><td>较宽松（对用户有益）</td><td>最低-中等，约 $0.01-0.04/对话；欧洲约 €0.03-0.04/条</td><td>内容必须与"实用目的"一致，<strong>掺入促销会被 Meta 重判为 Marketing</strong></td></tr>
+<tr><td><strong>Marketing 营销类</strong></td><td>促销、新品、活动、弃单召回、激活挽回、Newsletter</td><td>最严格（关注骚扰感）</td><td>最高，约 $0.02-0.08/对话；欧洲约 €0.11/条</td><td>建议 Footer 加退订选项（"回复 STOP"）提高通过率</td></tr>
+<tr><td><strong>Authentication 认证类</strong></td><td>OTP 验证码、两步验证</td><td>最宽松（格式固定）</td><td>最低，部分地区有免费额度</td><td>有固定格式 + 自动填充按钮，Meta 提供标准化模板</td></tr>
+</table>
+<p><strong>分类是审核被拒的头号原因</strong>：消息同时含实用信息+营销内容 → 按 Marketing 提交，不要"包装"成 Utility 降费（易被拒，且过了也可能被举报影响账号质量分）。</p>
+<blockquote>与 Visable BRD 对照：Utility €0.035/条、Marketing €0.11/条的口径与 Meta 欧洲费率一致。订阅确认 onboarding 模板"争取 Utility（含订阅确认措辞）"即属此分类风险点。</blockquote>
+<hr/>
+<h2>三、创建方式 A：WhatsApp Manager 界面操作（无代码）</h2>
+<p>路径：<strong>Meta Business Suite → WhatsApp 管理工具（WhatsApp Manager）→ 消息模板 → 创建模板</strong>，填写：</p>
+<ol>
+<li><strong>模板名称</strong>：仅小写字母+数字+下划线，如 <code>rfq_promo_recurring_v1</code>；</li>
+<li><strong>类别</strong>：Utility / Marketing / Authentication；</li>
+<li><strong>语言</strong>：选择目标语言（如 en、de）；同一模板名可建多语言版本，<strong>每个语言版本独立送审</strong>；</li>
+<li><strong>Header</strong>（可选）：无 / 文本 / 图片 / 视频 / 文档（品牌图常用于营销）；</li>
+<li><strong>Body</strong>（必填）：正文，动态变量用 <code>{{1}}</code> <code>{{2}}</code> 占位，<strong>≤1024 字符</strong>，支持粗体/斜体；</li>
+<li><strong>Footer</strong>（可选）：灰色小字，放免责声明/退订提示；</li>
+<li><strong>Buttons</strong>（可选，最多 3 个）：快速回复（预设回复）或 CTA（访问网站链接/拨打电话）；</li>
+<li><strong>提交审核</strong>：Meta 审核通常几分钟～24 小时（第三方实测 24-48h 常见）。</li>
+</ol>
+<blockquote>另有<strong>预批准模板库</strong>：WhatsApp Manager 模板库中直接选用 Meta 预批准模板（如订单确认、物流等），<strong>即时批准</strong>，适合快速起步。</blockquote>
+<hr/>
+<h2>四、创建方式 B：Cloud API 编程创建（项目直连走这条）</h2>
+<p>POST 到 WABA 级接口创建：</p>
+<p>```bash</p>
+<p>curl -X POST 'https://graph.facebook.com/v21.0/{waba-id}/message_templates' \</p>
+<p>-H 'Authorization: Bearer {ACCESS_TOKEN}' \</p>
+<p>-H 'Content-Type: application/json' \</p>
+<p>-d '{</p>
+<p>"name": "rfq_promo_recurring",</p>
+<p>"language": "en",</p>
+<p>"category": "MARKETING",</p>
+<p>"components": [</p>
+<p>{ "type": "HEADER", "format": "TEXT", "text": "New RFQ matching your profile" },</p>
+<p>{ "type": "BODY", "text": "Hi {{1}}, a new buying request for {{2}} was just posted. Reply to get details." },</p>
+<p>{ "type": "FOOTER", "text": "Reply STOP to unsubscribe" },</p>
+<p>{ "type": "BUTTONS",</p>
+<p>"buttons": [</p>
+<p>{ "type": "URL", "text": "View RFQ", "url": "https://www.wlw.com/rfq/{{3}}" },</p>
+<p>{ "type": "QUICK_REPLY", "text": "Interested" }</p>
+<p>] }</p>
+<p>]</p>
+<p>}'</p>
+<p>```</p>
+<p>关键参数：</p>
+<table>
+<tr><th>参数</th><th>说明</th></tr>
+<tr><td><code>name</code></td><td>模板名，小写+下划线，审核后不可改</td></tr>
+<tr><td><code>language</code></td><td>语言代码，如 en、de、fr、es（_IT 等变体后缀视需求）</td></tr>
+<tr><td><code>category</code></td><td>UTILITY / MARKETING / AUTHENTICATION</td></tr>
+<tr><td><code>components</code></td><td>HEADER（format: TEXT/IMAGE/VIDEO/DOCUMENT）、BODY、FOOTER、BUTTONS（URL/PHONE/QUICK_REPLY）</td></tr>
+<tr><td>示例参数</td><td>提交时可附 <code>example</code> 示例值（真实样本，如 "Michael"、"ORD-2026-001234"），帮助审核理解用途、提高通过率</td></tr>
+</table>
+<p>管理接口（同域）：<code>GET /{waba-id}/message_templates</code> 列表、<code>DELETE</code> 删除；审核状态查询含 PENDING / APPROVED / REJECTED / PAUSED / DISABLED。</p>
+<p><strong>发送</strong>：模板批准后用 <code>POST /{phone-number-id}/messages</code>，<code>type: "template"</code> + 模板名 + 语言 + 变量值。</p>
+<hr/>
+<h2>五、审核机制与通过技巧</h2>
+<p><strong>被拒常见原因</strong>：垃圾信息风格（全大写、过多感叹号、夸大词汇"史上最低/最后机会/千万别错过"、制造恐慌）、营销伪装 Utility、含敏感信息索取、变量使用不规范、内容与声称用途不符。</p>
+<p><strong>提高通过率技巧</strong>（实测可将通过率提至 90%+）：</p>
+<ul>
+<li>用具体数字替代夸大词（"节省 €20" > "超大优惠"）；</li>
+<li>用截止日期替代恐慌语（"优惠至 3月31日" > "最后机会"）；</li>
+<li>变量按顺序连续编号 <code>{{1}}{{2}}{{3}}</code>，固定文本 ≥50%，每个变量前后有上下文；</li>
+<li>链接不直接放变量，用 URL 类型按钮；</li>
+<li>示例值给真实样本，不要占位符；</li>
+<li>营销模板 Footer/按钮加退订选项（Meta 鼓励，证明尊重选择权）。</li>
+</ul>
+<hr/>
+<h2>六、运营规则与常见坑</h2>
+<table>
+<tr><th>规则</th><th>说明</th></tr>
+<tr><td><strong>已批准模板不可修改</strong></td><td>要改文案只能新建模板重新送审 → 提交前仔细检查；高频模板可保留多版本做 A/B</td></tr>
+<tr><td><strong>模板数量上限</strong></td><td>每个 WABA 约 250 个已批准模板（跨语言合计），暂停/被拒不计入</td></tr>
+<tr><td><strong>质量分暂停</strong></td><td>用户拉黑/举报 → 模板质量分下降 → Meta 自动暂停/禁用模板；需维护账号质量</td></tr>
+<tr><td><strong>长期不用</strong></td><td>模板可能被置为 Paused，可后台重新启用</td></tr>
+<tr><td><strong>图片模板</strong></td><td>审批只审结构，<strong>发送时</strong>传具体图片；发送内容仍须合规</td></tr>
+<tr><td><strong>多语言版本</strong></td><td>同名模板每语言独立审核，建议先 EN 再按市场补本地语言</td></tr>
+<tr><td><strong>限流</strong></td><td>发送速率按账号等级（初始 250 会话/天，最高 100,000），标准档 80 msg/s</td></tr>
+</table>
+<hr/>
+<h2>七、对 Visable 项目的启示</h2>
+<ol>
+<li><strong>直连 Cloud API 需自建模板管理</strong>：建议按 BRD 模板清单（onboarding 订阅确认 / RFQ 营销 recurring / 产品推荐 / 系统消息 2 类 / 催复）规划命名规范（<code>rfq_promo_recurring_de</code> 等），走 API 批量创建 + 状态监控脚本；</li>
+<li><strong>分类策略</strong>：Utility 首批 EN+DE 措辞中性；订阅确认模板"争取 Utility"有被重判 Marketing 的风险（€0.035 → €0.11），建议提交时措辞严格交易化（确认订阅状态+偏好设置+退订，无任何促销成分）；</li>
+<li><strong>合规</strong>：营销类模板一律带退订（STOP）与偏好设置入口，与订阅漏斗合规要求一致；</li>
+<li><strong>节奏</strong>：FR/IT/ES 多语言模板建议提前与 DE/EN 并行送审，避免扩国时等审核；审核时间几分钟～24h 是常态，需预留；</li>
+<li><strong>费用复核</strong>：模板类别决定计费（Utility €0.035 vs Marketing €0.11），BRD 费用表需按最终获批类别回填校准。</li>
+</ol>
+<hr/>
+<h2>参考来源</h2>
+<ul>
+<li>Meta 官方：Template fundamentals（developers.facebook.com/documentation/business-messaging/whatsapp/templates/overview）、WhatsApp Manager 帮助中心</li>
+<li>GuruSup：WhatsApp API Message Templates Complete Guide（2026-06）</li>
+<li>ChatDaddy：WhatsApp 消息模板完全指南：出海企业模板申请与最佳实践（2026-03）</li>
+</ul>
+</body>
+</html>
