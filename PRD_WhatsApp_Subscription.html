@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>WhatsApp 订阅漏斗测算报告 v3</title>
+<title>PRD: WhatsApp 买家营销消息 · 订阅点位设计（v0.2）</title>
 <style>
 :root { --accent: #1a7f37; --border: #d0d7de; --bg: #f6f8fa; }
 body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -26,10 +26,26 @@ code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12.
 hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 li { margin: 4px 0; }
 a { color: #0969da; text-decoration: none; }
+
+body{max-width:1280px;display:flex;gap:0;padding:0;margin:0 auto}
+.toc{position:sticky;top:0;align-self:flex-start;width:280px;min-width:280px;height:100vh;overflow-y:auto;border-right:1px solid var(--border);padding:28px 20px 40px;background:#fbfdfc;box-sizing:border-box}
+.toc-title{font-weight:700;color:var(--accent);font-size:1.05em;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--accent)}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc ul ul{margin-left:14px}
+.toc li{margin:3px 0}
+.toc a{color:#374151;font-size:0.86em;display:block;padding:3px 8px;border-radius:6px;border-left:2px solid transparent}
+.toc a:hover{color:var(--accent);background:#e8f5ee;text-decoration:none}
+.toc a.active{color:var(--accent);font-weight:600;background:#e8f5ee;border-left-color:var(--accent)}
+.toc-h3 a{color:#64748b}
+.content{flex:1;min-width:0;max-width:960px;margin:0 auto;padding:40px 48px}
+h2[id],h3[id]{scroll-margin-top:20px}
+@media (max-width:900px){body{display:block}.toc{position:relative;width:100%;min-width:0;height:auto;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.content{padding:24px 20px}}
+
 </style>
 </head>
 <body>
-<h1>PRD：WhatsApp 买家营销消息 · 订阅点位设计（v0.2）</h1>
+<nav class="toc"><div class="toc-title">📑 目录</div><ul><li class="toc-h2"><a href="#sec-1">一、背景与目标</a><ul><li class="toc-h3"><a href="#sec-2">1.1 背景</a></li><li class="toc-h3"><a href="#sec-3">1.2 目标（UC-419 口径）</a></li><li class="toc-h3"><a href="#sec-4">1.3 本 PRD 范围</a></li></ul></li><li class="toc-h2"><a href="#sec-5">二、订阅点位设计（核心）</a><ul><li class="toc-h3"><a href="#sec-6">2.1 点位总览</a></li><li class="toc-h3"><a href="#sec-7">2.2 点位 1：询盘发出后弹窗（P0，灰度首选）</a></li><li class="toc-h3"><a href="#sec-8">2.3 点位 2：手机号验证后二次询问（P0）</a></li><li class="toc-h3"><a href="#sec-9">2.4 点位 3：注册页独立勾选框（P0）</a></li><li class="toc-h3"><a href="#sec-10">2.5 点位 4：Subscription Center（P1，达标关键路径）</a></li><li class="toc-h3"><a href="#sec-11">2.6 点位 5：站外入口（P2，一期不做）</a></li><li class="toc-h3"><a href="#sec-12">2.7 点位设计原则（国际站规律落地）</a></li><li class="toc-h3"><a href="#sec-13">2.8 点位 6（探索）：非注册用户订阅——广告交互 + 唤端结合（P2/P3 候选）</a></li></ul></li><li class="toc-h2"><a href="#sec-14">三、Double Opt-in 流程设计</a><ul><li class="toc-h3"><a href="#sec-15">3.1 流程总览</a></li><li class="toc-h3"><a href="#sec-16">3.2 二级确认通道与文案（对标国际站绑定码范式）</a></li><li class="toc-h3"><a href="#sec-17">3.3 同意记录存储（Legal 审计证据）</a></li><li class="toc-h3"><a href="#sec-18">3.4 与系统消息的关系（口径说明）</a></li></ul></li><li class="toc-h2"><a href="#sec-19">四、订阅态三态服务</a><ul><li class="toc-h3"><a href="#sec-20">4.1 状态定义</a></li><li class="toc-h3"><a href="#sec-21">4.2 状态流转</a></li><li class="toc-h3"><a href="#sec-22">4.3 接口设计（供发送编排层调用）</a></li></ul></li><li class="toc-h2"><a href="#sec-23">五、订阅后 Onboarding 设计</a></li><li class="toc-h2"><a href="#sec-24">六、数据埋点与归因</a><ul><li class="toc-h3"><a href="#sec-25">6.1 埋点事件（订阅链路全漏斗）</a></li><li class="toc-h3"><a href="#sec-26">6.2 归因链路</a></li></ul></li><li class="toc-h2"><a href="#sec-27">七、护栏与合规</a><ul><li class="toc-h3"><a href="#sec-28">7.1 合规要求（德国 GDPR Art.7 + UWG/ePrivacy）</a></li><li class="toc-h3"><a href="#sec-29">7.2 频控与熔断（与发送策略共享）</a></li></ul></li><li class="toc-h2"><a href="#sec-30">八、依赖清单</a></li><li class="toc-h2"><a href="#sec-31">九、衡量指标</a><ul><li class="toc-h3"><a href="#sec-32">9.1 订阅漏斗指标（按点位拆分，含实测基线）</a></li><li class="toc-h3"><a href="#sec-33">9.2 灰度期（9 月 DE 单点位）验收标准</a></li><li class="toc-h3"><a href="#sec-34">9.3 数据看板需求（对齐 Nexus PRD 风格）</a></li></ul></li><li class="toc-h2"><a href="#sec-35">十、里程碑</a></li><li class="toc-h2"><a href="#sec-36">十一、附录</a><ul><li class="toc-h3"><a href="#sec-37">11.1 术语表</a></li><li class="toc-h3"><a href="#sec-38">11.2 演示图索引</a></li><li class="toc-h3"><a href="#sec-39">11.3 参考资料</a></li></ul></li></ul></nav>
+<div class="content"><h1>PRD：WhatsApp 买家营销消息 · 订阅点位设计（v0.2）</h1>
 <table>
 <tr><th>项</th><th>内容</th></tr>
 <tr><td>文档状态</td><td>v0.2 草案（供评审；融入国际站语雀实读 + Redash 实测，相对 v0.1 重写）</td></tr>
@@ -41,8 +57,8 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>格式参考</td><td>Nexus WhatsApp Integration PRD（Confluence）；Alibaba 国际站订阅欢迎流（语雀）</td></tr>
 </table>
 <hr/>
-<h2>一、背景与目标</h2>
-<h3>1.1 背景</h3>
+<h2 id="sec-1">一、背景与目标</h2>
+<h3 id="sec-2">1.1 背景</h3>
 <ul>
 <li>WhatsApp 全球日活 25 亿+，欧洲渗透率 ≥ 50%，在 63/100 个国家/地区排名第一（2022 年起保持领先），DE/FR/IT/ES 核心买家群天然在 WhatsApp。</li>
 </ul>
@@ -54,7 +70,7 @@ a { color: #0969da; text-decoration: none; }
 <li><strong>订阅收集是漏斗最上游、重中之重</strong>：国际站累计订阅已 <strong>900w+</strong>（2026-08-10 手册口径，历时 1.5 年+，旧文档 500w 已过时），8 大订阅入口全站铺设；Visable 从 0 开始，<strong>订阅入口必须从一期就铺设、多点位并行</strong>。</li>
 <li><strong>国际站实测规律："意图越高转化越高"</strong>（沟通页弹窗 8.6% ≈ 注册联动 10% >> 订后页 2% >> 首页大曝光 0.2–0.4%）——点位设计必须锚定高意图场景，不做低意图大曝光。</li>
 </ul>
-<h3>1.2 目标（UC-419 口径）</h3>
+<h3 id="sec-3">1.2 目标（UC-419 口径）</h3>
 <table>
 <tr><th>目标项</th><th>数值</th></tr>
 <tr><td>订阅池圈人漏斗</td><td>营销消息发往订阅池（audience funnel），圈人频次灰度期 4% 池/日起步 → 稳定期每周 1 轮（14% 池/日）</td></tr>
@@ -71,12 +87,12 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>乐观</td><td>≈ 39,000–40,000</td><td>✓ 超额 11–14%</td><td>点位 1 一级同意率 20% 达成</td></tr>
 </table>
 <blockquote><strong>结论：35,000 可达，但"站内新触点 + Subscription Center 存量激活"缺一不可</strong>；灰度期（9 月 DE 单点位）验证转化率基线（一级同意 ≥15%、二级确认 ≥60%）是 10 月全量放量的前提。</blockquote>
-<h3>1.3 本 PRD 范围</h3>
+<h3 id="sec-4">1.3 本 PRD 范围</h3>
 <p>本 PRD 覆盖<strong>订阅收集链路</strong>（UC-419 的前置与输入）：订阅点位设计、double opt-in 流程、订阅态三态服务、订阅后 onboarding、同意记录与埋点、护栏与合规、衡量指标。</p>
 <p><strong>Out（不在本 PRD）</strong>：营销消息发送策略本身（圈人池、频次 A/B）→ 由 UC-419 主体方案承接；系统消息（conversation 提醒 / 催复提醒）→ PRD_Reminder；商家侧通知 → 述合。</p>
 <hr/>
-<h2>二、订阅点位设计（核心）</h2>
-<h3>2.1 点位总览</h3>
+<h2 id="sec-5">二、订阅点位设计（核心）</h2>
+<h3 id="sec-6">2.1 点位总览</h3>
 <table>
 <tr><th>#</th><th>点位</th><th>位置</th><th>优先级</th><th>一级同意机制</th><th>二级确认机制</th><th>对标锚点（国际站实测）</th><th>预期贡献占比</th></tr>
 <tr><td>1</td><td>询盘发出后弹窗</td><td>询盘/RFQ 提交成功页</td><td><strong>P0（9 月灰度）</strong></td><td>场景绑定授权弹窗（最强合规）</td><td>WhatsApp 确认消息/链接</td><td>沟通页弹窗<strong>8.6%</strong>（日均 ab3 152k→授权 13k）</td><td>高（~58%，高意图）</td></tr>
@@ -102,7 +118,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>PC 页脚链接</td><td><img src="assets/prd/int_09_home_pc_footer.png" alt="PC 页脚：Get dedicated support on Whatsapp!"/></td><td>P2（不做）</td><td>页脚低频链接</td></tr>
 <tr><td>搜索重复 query</td><td><img src="assets/prd/int_10_search_subscribe_flow.png" alt="搜索订阅三步流：subscribe → 接收消息 → 订阅成功"/></td><td>P2（二期）</td><td>搜索意图订阅新玩法，+6k/天</td></tr>
 </table>
-<h3>2.2 点位 1：询盘发出后弹窗（P0，灰度首选）</h3>
+<h3 id="sec-7">2.2 点位 1：询盘发出后弹窗（P0，灰度首选）</h3>
 <ul>
 <li><strong>触发时机</strong>：询盘/RFQ 提交成功事件（感谢页渲染后 1s 弹出）。</li>
 <li><strong>UI 交互</strong>：成功页底部弹窗（半屏 modal），主按钮「开启 WhatsApp 消息提醒」，次按钮「以后再说」（关闭后本轮不再弹出，下次提交询盘再触发）。</li>
@@ -124,7 +140,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/int_07_chat_connect_popup_v2.png" alt="沟通弹窗变体：Receive responses…Allow WhatsApp notification"/></td><td>变体 A：Allow WhatsApp notification 按钮措辞</td></tr>
 <tr><td><img src="assets/prd/str_04_chat_allow_popup.png" alt="沟通弹窗 v3：Receive responses from suppliers…Allow WhatsApp notification"/></td><td>变体 B：背景为真实聊天会话、弹窗叠于会话之上（本设计建议形态）</td></tr>
 </table>
-<h3>2.3 点位 2：手机号验证后二次询问（P0）</h3>
+<h3 id="sec-8">2.3 点位 2：手机号验证后二次询问（P0）</h3>
 <ul>
 <li><strong>触发时机</strong>：手机号验证码校验成功回调（含注册中、账号设置中、下单前验证等所有验证场景）。</li>
 <li><strong>UI 交互</strong>：验证成功后弹窗（同 2.2 样式），主按钮「开启 WhatsApp 消息提醒」，次按钮「以后再说」。</li>
@@ -139,7 +155,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/temu_03_phone_verify.png" alt="TEMU 电话验证：验证手机号后引导订阅"/></td><td>TEMU 注册中电话验证后直接进入订阅确认——与本点位「验证成功回调后询问」同构</td></tr>
 <tr><td><img src="assets/prd/shein_05_phone_optin_us.png" alt="SHEIN 手机注册授权 SMS（US）"/></td><td>SHEIN 手机号注册时在验证页同步征求 SMS 授权——验证场景承载授权入口的竞品实证</td></tr>
 </table>
-<h3>2.4 点位 3：注册页独立勾选框（P0）</h3>
+<h3 id="sec-9">2.4 点位 3：注册页独立勾选框（P0）</h3>
 <ul>
 <li><strong>位置</strong>：注册流程最后一步（提交按钮上方），独立于服务条款勾选（不得捆绑）。</li>
 <li><strong>UI 交互</strong>：默认<strong>不勾选</strong>；勾选框文案：</li>
@@ -159,7 +175,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/ae_register_page.png" alt="AE 注册页（社交登录）"/></td><td>AE 注册页整体形态（本点位勾选框所在页面的竞品参照）</td></tr>
 <tr><td><img src="assets/prd/shein_04_register_sg.png" alt="SHEIN 注册 SG：WhatsApp 注册入口"/></td><td>SHEIN 以 WhatsApp 作为注册登录方式——Visable 一期不做「WhatsApp 登录」形态，仅作参考</td></tr>
 </table>
-<h3>2.5 点位 4：Subscription Center（P1，达标关键路径）</h3>
+<h3 id="sec-10">2.5 点位 4：Subscription Center（P1，达标关键路径）</h3>
 <ul>
 <li><strong>位置</strong>：账号设置 → 通知偏好（复用 UPR-55 Lifecycle 入口，不新建页面壳）。</li>
 <li><strong>功能</strong>：</li>
@@ -182,13 +198,13 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/ae_notification_settings.png" alt="AE 通知设置：Get offers via SMS & WhatsApp + Enable（PC）"/></td><td>AE 通知设置 PC：营销渠道（SMS & WhatsApp）独立 Enable 开关</td></tr>
 <tr><td><img src="assets/prd/ae_notification_settings_app.png" alt="AE 通知设置（App 版）"/></td><td>AE 通知设置 App 版（移动端形态）</td></tr>
 </table>
-<h3>2.6 点位 5：站外入口（P2，一期不做）</h3>
+<h3 id="sec-11">2.6 点位 5：站外入口（P2，一期不做）</h3>
 <ul>
 <li><strong>形态</strong>：IG/FB 主页链接、独立落地页（表单勾选或回复关键词订阅）。</li>
 <li><strong>二级确认</strong>：国际站实操范式为<strong>绑定码流程</strong>：站内点击订阅 → wa.me 唤醒 WhatsApp 带入话术/绑定码（BIND-xxx）→ 用户发送绑定码 → 系统回欢迎话术 → 订阅成功；站外话术 "I would like to subscribe alibaba.com channel."。Visable 站外入口可复用此范式（无 WhatsApp 对话上下文时走短信/邮件确认码）。</li>
 <li><strong>一期不做原因</strong>：① 链路最长、合规风险最高；② 订阅量爬坡前站内四触点已够；③ 站外号码无法与站内用户 id 关联，埋点归因断裂。待站内点位跑通、Legal 确认后二期评估。</li>
 </ul>
-<h3>2.7 点位设计原则（国际站规律落地）</h3>
+<h3 id="sec-12">2.7 点位设计原则（国际站规律落地）</h3>
 <table>
 <tr><th>国际站规律</th><th>对本设计的落地</th></tr>
 <tr><td>意图越高转化越高（沟通 8.6% ≈ 注册 10% >> 订后 2% >> 首页 0.2–0.4%）</td><td>点位 1（高意图）为主力，点位 2/3 为补充；<strong>不做首页大曝光入口</strong>（100w UV 级仅 0.2–0.4%，效率极低，P2 正确）</td></tr>
@@ -199,11 +215,57 @@ a { color: #0969da; text-decoration: none; }
 <p><strong>竞品首页订阅形态</strong>（佐证「首页大曝光不做」的取舍）：</p>
 <table>
 <tr><th>演示图</th><th>说明</th></tr>
-<tr><td><img src="assets/prd/shein_01_home_pc.png" alt="SHEIN 首页 PC 订阅框"/></td><td>SHEIN 首页 PC 底部订阅框——竞品确实全站铺设，但国际站实测首页转化仅 0.2–0.4%，Visable 一期不做首页入口，优先高意图点位</td></tr>
 </table>
+<p><img src="assets/prd/shein_01_home_pc.png" alt="SHEIN 首页 PC 订阅框"/> | SHEIN 首页 PC 底部订阅框——竞品确实全站铺设，但国际站实测首页转化仅 0.2–0.4%，Visable 一期不做首页入口，优先高意图点位 |</p>
+<h3 id="sec-13">2.8 点位 6（探索）：非注册用户订阅——广告交互 + 唤端结合（P2/P3 候选）</h3>
+<h4>问题背景</h4>
+<p>现有五个点位（询盘弹窗 / 验证后询问 / 注册勾选 / Subscription Center / 站外入口）<strong>全部依赖用户已在 Visable 有账号且处于登录态</strong>（或注册/验证流程中）。对于<strong>非注册用户</strong>（匿名浏览、搜索引擎进入、首次访问即离开等），没有任何订阅触点——这批用户是 Visable 全站 UV 的最大构成（DAU 4.5w 中注册用户占比远低于全量）。</p>
+<p>国际站对标：国际站另有<strong>手机号订阅模式</strong>（非关联 aliid 用户池，日均进线 3-5k + 存量 80w），通过 wa.me 唤端 + 绑定码 BIND-xxx 完成 double opt-in，判定流程含欧洲手机号过滤（合规从严）。该模式虽然整体转化率低于站内点位（进站 UV 1w vs 注册联动 4k），但覆盖了<strong>站内点位无法触及</strong>的用户群。</p>
+<h4>形态定义</h4>
+<p><strong>核心机制</strong>：广告交互（社媒广告/展示广告/再营销）→ wa.me 唤端 → 绑定码 double opt-in → 订阅成功</p>
+<p>```</p>
+<p>非注册用户点击社媒广告（FB/IG/Google）</p>
+<p>↓ 携带 UTM 参数 + 绑定码（wa.me?text=BIND-xxx）</p>
+<p>唤端打开 WhatsApp（自动填充绑定码 + 话术）</p>
+<p>↓ 用户发送绑定码</p>
+<p>系统记录手机号 → 标记订阅 → 回欢迎话术</p>
+<p>↓ 用户后续注册时可关联账号</p>
+<p>订阅状态从「未知号」转为「已关联」</p>
+<p>```</p>
+<h4>三个切入点</h4>
+<table>
+<tr><th>#</th><th>切入点</th><th>链路</th><th>曝光基数</th><th>挑战</th></tr>
+<tr><td>1</td><td><strong>社媒广告交互</strong>（FB/IG 广告 → wa.me）</td><td>点击广告 → wa.me 唤端带入绑定码 → 用户发送 → 订阅</td><td>取决于广告预算与受众规模；国际站站外入口 UV 与 MA 1%（40w×1%）同量级参考</td><td>① 广告素材须经 Legal 审核（包含明确订阅告知）② 无 visitor_sk，归因断裂③ 号码区分度：has_phone 100% 覆盖，需精确可触达标准</td></tr>
+<tr><td>2</td><td><strong>再营销/受众匹配</strong>（访客重定向 → wa.me）</td><td>未注册访客 → Retargeting cookie → Google/FB → 广告 → wa.me 唤端订阅</td><td>依赖访客规模；Visable Web UV 4.0w/日中的非注册部分</td><td>① 再营销须符合 GDPR cookie 同意② 无法判断用户是否已有访客 sk（需 bridge）③ 避开头像/号码匹配等高风险方式（GPDR）</td></tr>
+<tr><td>3</td><td><strong>二维码/落地页静默入口</strong></td><td>线下物料/站外文章 → 扫码/点击 → wa.me 唤端</td><td>可控，可作为常驻唤端入口；对标国际站首页 QR 形态</td><td>① 输入摩擦大（扫码→发码→确认）② 适合线下场景，Visable 线上为主</td></tr>
+</table>
+<h4>与现有唤端能力的关系</h4>
+<table>
+<tr><th>现有方案（§2.6 站外入口·P2）</th><th>本方案新增</th></tr>
+<tr><td>用户主动访问 IG/FB 主页或落地页，表单勾选或回复关键词订阅</td><td>用户无需主动访问——广告侧推送触达 → 广告点击即唤端，被动→主动的倒置</td></tr>
+<tr><td>需用户独立落地页停留并操作（页面停留 → 填表单/点链接）</td><td><strong>零摩擦</strong>：点击即唤端 WhatsApp，最小化用户流失</td></tr>
+<tr><td>号码收集 + 短信/邮件确认码（站外号码无账号关联）</td><td>同样面临号码无账号关联问题，但绑定码模式（wa.me 唤端）已被国际站验证为最低摩擦的 double opt-in 路径</td></tr>
+<tr><td>一期不做</td><td>建议<strong>二期试点</strong>（Legal 确认 + 预算到位后）</td></tr>
+</table>
+<h4>合规要点（待 Legal 确认）</h4>
+<ol>
+<li><strong>欧洲 GDPR & B2B 同意门槛</strong>：广告交互中收集手机号的同意机制需要明确告知用户"接收 WhatsApp 营销消息"——不能仅笼统写"订阅"；</li>
+<li><strong>号码过滤</strong>：国际站对欧洲手机号主动过滤（合规从严）→ Visable 主战场即欧洲，<strong>非注册用户的号码过滤逻辑必须更严格</strong>，建议在一期用大站外入口的方案中生成本方案的可操作判定流程；</li>
+<li><strong>用户身份关联</strong>：站外订阅的号码在用户后续注册时，需设计<strong>号码→账号关联机制</strong>（绑定码或站内验证），将订阅状态从「未知号」迁移至「已关联」；</li>
+<li><strong>退订通道</strong>：退订须覆盖站外 STOP/Unsubscribe 关键词，与 Subscription Center 共享退订状态。</li>
+</ol>
+<h4>优先级判断：P2/P3（二期或三期候选）</h4>
+<table>
+<tr><th>维度</th><th>评分</th><th>依据</th></tr>
+<tr><td>订阅贡献</td><td>⭐⭐ 中</td><td>覆盖站内无法触及的用户群，但无 visable 账号的用户订阅后停留入口在 WA，站内行为归因困难</td></tr>
+<tr><td>技术复杂度</td><td>⚠ 高</td><td>唤端跳转 + 绑定码生成 + 号码→账号关联 + 归因链路（无 visitor_sk），远高于站内点位</td></tr>
+<tr><td>合规风险</td><td>⚠ 高</td><td>广告交互收集手机号用于 WhatsApp 订阅，欧洲合规门槛最高，须 Legal 逐项确认</td></tr>
+<tr><td>优先级</td><td><strong>P2/P3</strong></td><td>建议等站内四点位+SC 上线验证后再启动（2027 Q1 评估），或作为订阅达标压力的备选措施</td></tr>
+</table>
+<blockquote><strong>与 §1.2 目标的关系</strong>：基准情景下缺口 12,456（64%），B 计划中已包含"增加新入口"选项。本点位可作为 B 计划落地选项之一，在灰度期结论（2026-09 末）后视达标压力决策是否提前。</blockquote>
 <hr/>
-<h2>三、Double Opt-in 流程设计</h2>
-<h3>3.1 流程总览</h3>
+<h2 id="sec-14">三、Double Opt-in 流程设计</h2>
+<h3 id="sec-15">3.1 流程总览</h3>
 <p>```</p>
 <p>用户在一级触点主动授权（勾选/弹窗确认）</p>
 <p>↓ 记录 consent（留证：谁/何时/入口/文案原文/版本）</p>
@@ -217,7 +279,7 @@ a { color: #0969da; text-decoration: none; }
 <p>↓</p>
 <p>7 天冷却后进入圈人池（偏好「仅重要消息」自动降频）</p>
 <p>```</p>
-<h3>3.2 二级确认通道与文案（对标国际站绑定码范式）</h3>
+<h3 id="sec-16">3.2 二级确认通道与文案（对标国际站绑定码范式）</h3>
 <table>
 <tr><th>项</th><th>设计</th><th>国际站对标</th></tr>
 <tr><td>通道</td><td>WhatsApp 模板消息（优先）／短信验证码（WhatsApp 不可达时兜底）</td><td>绑定码流程（wa.me 唤醒 + BIND-xxx 绑定码）为实操范本：站内点击 → 带入绑定码 → 发送 → 回欢迎话术 → 订阅成功</td></tr>
@@ -233,27 +295,27 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/temu_04_success.png" alt="TEMU 订阅成功页"/></td><td>TEMU 订阅成功确认页（竞品确认流程终点形态）</td></tr>
 <tr><td><img src="assets/prd/shein_03_sms_complement.png" alt="SHEIN 短信补充页：WhatsApp/SMS 订阅"/></td><td>SHEIN 短信渠道的订阅补充页——对应本方案 WhatsApp 不可达时的短信兜底通道</td></tr>
 </table>
-<h3>3.3 同意记录存储（Legal 审计证据）</h3>
+<h3 id="sec-17">3.3 同意记录存储（Legal 审计证据）</h3>
 <ul>
 <li>存储内容：consent_id、用户 id（visitor_sk）、触点标识（point_id）、同意时间（UTC）、IP 国家、设备信息、<strong>同意文案原文 + 文案版本号</strong>、二级确认时间、状态流转时间线。</li>
 <li>存储方案：与数据侧对齐（TBD），不可变日志（append-only），保留期 ≥ 法定要求（建议 ≥ 3 年）。</li>
 <li>查询能力：支持按用户 id 回溯完整同意链，供 Legal / 投诉举证。</li>
 </ul>
-<h3>3.4 与系统消息的关系（口径说明）</h3>
+<h3 id="sec-18">3.4 与系统消息的关系（口径说明）</h3>
 <ul>
 <li><strong>营销消息</strong>：必须完成 double opt-in（一级 + 二级）后才可发送。</li>
 <li><strong>系统消息</strong>（conversation 提醒 / 催复提醒）：一级 opt-in 即可（BRD 4.1 口径），由 PRD_Reminder 侧定义；订阅态服务按消息类别区分授权门槛，同一状态字段存储两类授权标记（marketing_scope / system_scope）。</li>
 </ul>
 <hr/>
-<h2>四、订阅态三态服务</h2>
-<h3>4.1 状态定义</h3>
+<h2 id="sec-19">四、订阅态三态服务</h2>
+<h3 id="sec-20">4.1 状态定义</h3>
 <table>
 <tr><th>状态</th><th>定义</th><th>可否收营销</th><th>可否收系统</th></tr>
 <tr><td>subscribed（已订阅）</td><td>double opt-in 完成（营销）；一级同意完成（系统）</td><td>✓</td><td>✓</td></tr>
 <tr><td>unknown（未知）</td><td>一级同意但未完成二级确认（24h 超时）；或换号未重验证；或状态不明</td><td>✗</td><td>✗（系统消息需一级同意，未完成则不发）</td></tr>
 <tr><td>unsubscribed（已退订）</td><td>用户退订（Subscription Center / STOP / 关键词）</td><td>✗</td><td>✗（按 PRD_Reminder 口径执行）</td></tr>
 </table>
-<h3>4.2 状态流转</h3>
+<h3 id="sec-21">4.2 状态流转</h3>
 <ul>
 <li>无记录 →（一级同意）→ pending →（二级确认完成）→ subscribed</li>
 <li>pending →（24h 超时）→ unknown</li>
@@ -261,7 +323,7 @@ a { color: #0969da; text-decoration: none; }
 <li>unsubscribed →（Subscription Center 重新开启）→ 重新走 double opt-in</li>
 <li>subscribed / unknown →（手机号变更）→ unknown（换号重授权）</li>
 </ul>
-<h3>4.3 接口设计（供发送编排层调用）</h3>
+<h3 id="sec-22">4.3 接口设计（供发送编排层调用）</h3>
 <ul>
 <li>查询接口：<code>GET /subscription-status?user_id={id}&scope=marketing</code> → 返回三态 + 偏好（品类/频次）+ 最近同意时间。</li>
 <li>数据颗粒度：场景 id - 消息 id - 用户 id 三级（对齐 BRD 5.1 口径）。</li>
@@ -269,7 +331,7 @@ a { color: #0969da; text-decoration: none; }
 <li>退订关键字监控：STOP / UNSUBSCRIBE / ABMELDEN / 德语变体，WhatsApp webhook 回调即时解析并落三态。</li>
 </ul>
 <hr/>
-<h2>五、订阅后 Onboarding 设计</h2>
+<h2 id="sec-23">五、订阅后 Onboarding 设计</h2>
 <table>
 <tr><th>项</th><th>设计</th></tr>
 <tr><td>触发时机</td><td>二级确认完成（置 subscribed）后 T+0 立即发送，仅 1 条、一次性</td></tr>
@@ -285,8 +347,8 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/phone_01_ai_welcome.png" alt="手机号订阅 AI Sourcing Agent 欢迎话术（Explore AI Features）"/></td><td>国际站手机号订阅后欢迎消息形态：确认订阅 + 功能引导（Explore AI Features）——本方案 onboarding 消息的参考范本</td></tr>
 </table>
 <hr/>
-<h2>六、数据埋点与归因</h2>
-<h3>6.1 埋点事件（订阅链路全漏斗）</h3>
+<h2 id="sec-24">六、数据埋点与归因</h2>
+<h3 id="sec-25">6.1 埋点事件（订阅链路全漏斗）</h3>
 <table>
 <tr><th>事件</th><th>字段</th></tr>
 <tr><td>一级同意（触点曝光 → 点击授权）</td><td>consent_id、user_id/visitor_sk、point_id（registration / phone_verify / inquiry_popup / subscription_center）、consent_time、copy_version、device、country</td></tr>
@@ -294,14 +356,14 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>退订</td><td>consent_id、channel（center/stop/reply）、unsub_time</td></tr>
 <tr><td>onboarding 发送</td><td>consent_id、message_id、delivered/read/clicked</td></tr>
 </table>
-<h3>6.2 归因链路</h3>
+<h3 id="sec-26">6.2 归因链路</h3>
 <ul>
 <li>push_id 贯穿原渠道（PUSH/EDM）与 WhatsApp 二次触达，visitor_sk 归因到用户级；订阅点位来源（point_id）作为独立维度进入归因报表。</li>
 <li>订阅归因模型：last-touch 点位归因（订阅量按触发二级确认的源头点位归属）。</li>
 </ul>
 <hr/>
-<h2>七、护栏与合规</h2>
-<h3>7.1 合规要求（德国 GDPR Art.7 + UWG/ePrivacy）</h3>
+<h2 id="sec-27">七、护栏与合规</h2>
+<h3 id="sec-28">7.1 合规要求（德国 GDPR Art.7 + UWG/ePrivacy）</h3>
 <table>
 <tr><th>要求</th><th>落地</th></tr>
 <tr><td>默认不勾选</td><td>注册页勾选框默认 false，不得预勾</td></tr>
@@ -321,7 +383,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td><img src="assets/prd/temu_05_sms_agree.png" alt="TEMU 短信订阅协议"/></td><td>TEMU 短信渠道协议页——多渠道授权文案范本</td></tr>
 <tr><td><img src="assets/prd/temu_06_frequency.png" alt="TEMU 接收频次设置"/></td><td>TEMU 消息接收频次选项——频次告知与控制的界面实证（对齐 §7.2 频控）</td></tr>
 </table>
-<h3>7.2 频控与熔断（与发送策略共享）</h3>
+<h3 id="sec-29">7.2 频控与熔断（与发送策略共享）</h3>
 <ul>
 <li>关系对 24h/1 次；单用户 24h ≤ 3 条；7 天内 WhatsApp 营销 ≤ 1 条、系统消息 ≤ 2 条（与述合商家侧合计不超限）。</li>
 <li>每日全局熔断 ≤ 1.5w session（防脚本攻击与计费风险红线）。</li>
@@ -329,7 +391,7 @@ a { color: #0969da; text-decoration: none; }
 <li>已订阅用户不重复展示勾选框；退订用户再次展示（国际站订阅防打扰实践）。</li>
 </ul>
 <hr/>
-<h2>八、依赖清单</h2>
+<h2 id="sec-30">八、依赖清单</h2>
 <table>
 <tr><th>依赖</th><th>负责方</th><th>关键日期</th></tr>
 <tr><td>UC-180 订阅入口 Epic 联动（订阅态服务、同意记录）</td><td>产品（牧可）</td><td>8 月内定排期</td></tr>
@@ -343,8 +405,8 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>DE 国 UV/询盘占比（Redash country 维度超时，待其他通道）</td><td>数据侧</td><td>9 月灰度排期前</td></tr>
 </table>
 <hr/>
-<h2>九、衡量指标</h2>
-<h3>9.1 订阅漏斗指标（按点位拆分，含实测基线）</h3>
+<h2 id="sec-31">九、衡量指标</h2>
+<h3 id="sec-32">9.1 订阅漏斗指标（按点位拆分，含实测基线）</h3>
 <table>
 <tr><th>指标</th><th>口径</th><th>实测/假设基线</th><th>目标</th></tr>
 <tr><td>触点曝光（L1）</td><td>询盘 1,083 req/日（含 Nexus，Visable 站内可用 ≈ <strong>810–840 req/日</strong>）、验证 887/日、注册 946/日（Redash 实测）</td><td>合计 2,916/日（去重前）；修正 Visable 站内 ≈ <strong>2,640–2,670/日</strong></td><td>≥ 反推所需 <strong>1,693/日</strong> ⚠ 含 Nexus 的原数（2,916）充足，修正后（~2,650）紧平衡</td></tr>
@@ -413,7 +475,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>9 月底</td><td>全月数据分析：① 点位 1 一级同意率 ② double opt-in 完成率 ③ DE 转化率 vs 假设（10-20%）→ 判定 10 月全量基于哪一情景</td></tr>
 <tr><td>10 月初</td><td>若基准达标（同意 ≥15%、二级 ≥60%），全量放量；若低于，同步启动 B 计划措施 1+2+3；若严重低于（同意 <10%），启动措施 4（提前 P2）</td></tr>
 </table>
-<h3>9.2 灰度期（9 月 DE 单点位）验收标准</h3>
+<h3 id="sec-33">9.2 灰度期（9 月 DE 单点位）验收标准</h3>
 <table>
 <tr><th>验收项</th><th>通过条件</th><th>通过后动作</th></tr>
 <tr><td>点位 1 一级同意率</td><td><strong>≥ 15%</strong>（实测 8.6%+ 即可确认全量基准成立）</td><td>10 月全量放量</td></tr>
@@ -421,7 +483,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>合规链路</td><td>模板过审（Utility 首批）+ 零投诉</td><td>营销试点启动 Gate</td></tr>
 <tr><td>若显著低于</td><td>同意 < 15% 或二级 < 60%</td><td>提前加码 Subscription Center 存量激活或登录页入口（原 P2 提前）</td></tr>
 </table>
-<h3>9.3 数据看板需求（对齐 Nexus PRD 风格）</h3>
+<h3 id="sec-34">9.3 数据看板需求（对齐 Nexus PRD 风格）</h3>
 <ul>
 <li>订阅漏斗看板：曝光 → 一级同意 → 二级确认 → subscribed，按点位/国家/日期维度（T-3 数据时效约定）。</li>
 <li>爬坡看板：累计订阅 vs 35,000 目标线（财年倒推日均 165），按日更新。</li>
@@ -429,7 +491,7 @@ a { color: #0969da; text-decoration: none; }
 <li>归因看板：订阅点位 × 后续 AB/AB2 转化关联分析。</li>
 </ul>
 <hr/>
-<h2>十、里程碑</h2>
+<h2 id="sec-35">十、里程碑</h2>
 <table>
 <tr><th>时间</th><th>里程碑</th><th>交付</th></tr>
 <tr><td>8 月</td><td>PRD 定稿 → 订阅入口改造排期 → Legal 咨询启动 → UC-180 对齐 → 点位人群重叠率/DE 占比取数</td><td>PRD 发布、排期确认</td></tr>
@@ -439,8 +501,8 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>2027 Q1</td><td>订阅冲刺 35,000（含存量激活补足）+ 日均 UV ≥ 160 / AB2 ≥ 5 达成验证</td><td>财年底（2027-03-31）目标达成</td></tr>
 </table>
 <hr/>
-<h2>十一、附录</h2>
-<h3>11.1 术语表</h3>
+<h2 id="sec-36">十一、附录</h2>
+<h3 id="sec-37">11.1 术语表</h3>
 <table>
 <tr><th>术语</th><th>定义</th></tr>
 <tr><td>一级同意</td><td>用户在站内触点主动授权（勾选/弹窗），含内容/频次/退订说明与留证</td></tr>
@@ -451,7 +513,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>活跃池</td><td>存量已验证用户中有登录记录的 13.7w（3.8%）——Subscription Center 激活的现实基数（非 360w 全量）</td></tr>
 <tr><td>圈人池</td><td>已订阅且过 onboarding 7 天冷却的用户集合，按轮次滚动圈人</td></tr>
 </table>
-<h3>11.2 演示图索引</h3>
+<h3 id="sec-38">11.2 演示图索引</h3>
 <p>本文档演示图共 33 张，存放于 <code>assets/prd/</code>，按使用章节索引如下：</p>
 <table>
 <tr><th>演示图</th><th>所在章节</th><th>内容</th></tr>
@@ -489,7 +551,7 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>temu_06_frequency.png</td><td>§7.1</td><td>TEMU 接收频次</td></tr>
 <tr><td>shein_01_home_pc.png</td><td>§2.7</td><td>SHEIN 首页订阅框</td></tr>
 </table>
-<h3>11.3 参考资料</h3>
+<h3 id="sec-39">11.3 参考资料</h3>
 <table>
 <tr><th>资料</th><th>位置</th></tr>
 <tr><td>BRD_WhatsApp买家发送策略一期 v1.2</td><td>本地 / jolyne2025.github.io/whatsapp-brd</td></tr>
@@ -501,6 +563,26 @@ a { color: #0969da; text-decoration: none; }
 <tr><td>04 whatsapp 业务策略表（目标基线）</td><td>钉钉 XPwkYGxZV347LdvpH3O5D5ozJAgozOKL</td></tr>
 <tr><td>WhatsApp 官方号申请 SOP（合规与模板口径）</td><td>Confluence ARISE/449445930</td></tr>
 <tr><td>PRD_Reminder Notification to improve AB2（系统消息口径）</td><td>Confluence PRODTECH/63340593</td></tr>
-</table>
+</table></div>
+<script>
+// scrollspy: 高亮当前章节
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var ids = Object.keys(map);
+  function onScroll(){
+    var cur = ids[0];
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (el && el.getBoundingClientRect().top <= 96) cur = ids[i];
+    }
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (map[cur]) map[cur].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
 </body>
 </html>
